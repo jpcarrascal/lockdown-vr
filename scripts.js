@@ -82,7 +82,7 @@ setupSample(songLocation)
     .then((sample) => {
       song.buffer = sample;
       song.source.buffer = song.buffer;
-      document.querySelector("#start").innerText="Play!";
+      document.querySelector("#start").innerText="Start!";
 });
 
 setupSample(BDLocation)
