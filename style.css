@@ -1,0 +1,30 @@
+body {
+  background-color: lightblue;
+}
+
+#start {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 200px;
+  height: 100px;
+  margin: auto;
+  color: white;
+  font-family: "Trebuchet MS";
+  font-size: 2em;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgba(255,255,255,0.3);
+  user-select: none;
+}
+
+#start:hover
+{
+  background-color: rgba(255,255,255,0.6);
+}

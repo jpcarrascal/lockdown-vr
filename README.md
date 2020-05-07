@@ -1,2 +1,1 @@
-# lockdown-vr
-Web VR "videoclip" for Lockdown, a song by Spacebarman
+# Lockdown "videoclip", by Spacebarman
