@@ -15,41 +15,40 @@
     <meta name="description" content="Lockdown - Spacebarman">
     <link rel="icon" 
       type="image/png" 
-      href="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Ffavicon.ico?v=1587070763366" />
+      href="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ffavicon.ico?v=1588790683613" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
   
     <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
  
     <script src="https://unpkg.com/@tlaukkan/aframe-three-color-gradient-shader@0.0.1/index.js"></script>
-        <script src="scripts.js"></script>
-  
+    <script defer src="script.js"></script>
   </head>
   <body>
     
       <a-scene id="scene" shadow audio-update scene-setup>
         <a-sky geometry="primitive: sphere; radius:2000"
-          material="shader: threeColorGradientShader; topColor: rgb(0,192,255); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
+          material="shader: threeColorGradientShader; topColor: rgba(0,192,255,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
         </a-sky>
         <!-- <a-sphere radius="1900" color="white" material="side: back; opacity:0.5; transparent:true; emissive:#FFF "></a-sphere>-->
         <a-entity id="action" scene-update sky-colors light-sequencer></a-entity>
         <a-assets>
           <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
           <a-mixin id="wood-color" material="color: #492900;"></a-mixin>
-          <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FSnare-tripod.glb?v=1587928806574"></a-asset-item>
-          <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FHihat-tripod.glb?v=1587931602098"></a-asset-item>
-          <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FKick-pedal.glb?v=1587929436528"></a-asset-item>
-          <a-asset-item id="kdrum-leg-model" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FKdrum-leg.glb?v=1587932800654"></a-asset-item>
-          <img id="parquet" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Fparquet00b.png?v=1588264925289" />
-          <img id="tile" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Ftile-texture.jpg?v=1587898043174" />
-          <img id="grass-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Fgrass.jpg?v=1587819361784" />
-          <img id="street-block" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Fblock.png?v=1588348923165" />
-          <img id="left-wall-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FLeft-wall.png?v=1588333554317" />
-          <img id="right-wall-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FRight-wall.png?v=1588333245728" />
-          <img id="back-wall-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FBack-wall.jpg?v=1588330397796" />
-          <img id="clock-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Fclock.png?v=1588333136896" />
-          <img id="bass-drum-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2Fkick-skin.jpg?v=1587943997446" />
-          <img id="billboard-texture" src="https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FBillboard.jpg?v=1587899668228" />
+          <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSnare-tripod.glb?v=1588790687489"></a-asset-item>
+          <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHihat-tripod.glb?v=1588790685367"></a-asset-item>
+          <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKick-pedal.glb?v=1588790686001"></a-asset-item>
+          <a-asset-item id="kdrum-leg-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKdrum-leg.glb?v=1588790685734"></a-asset-item>
+          <img id="parquet" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparquet00b.png?v=1588790688089" />
+          <img id="tile" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftile-texture.jpg?v=1588790683382" />
+          <img id="grass-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fgrass.jpg?v=1588790684785" />
+          <img id="street-block" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fblock.png?v=1588790688359" />
+          <img id="left-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLeft-wall.png?v=1588790684954" />
+          <img id="right-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FRight-wall.png?v=1588790684406" />
+          <img id="back-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBack-wall.jpg?v=1588790688055" />
+          <img id="clock-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fclock.png?v=1588790683549" />
+          <img id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
+          <img id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
         </a-assets>
         
         <!-- room -->
@@ -68,7 +67,7 @@
               <a-box mixin="wall" position="2 0 2.5" width="0.15" height="9" depth="10" material="roughness: 1;"></a-box>
 
               <a-box mixin="wood-color" position="0 -1.45 0" width="0.16" height="0.1" depth="5"></a-box>
-              <!--- clock:--->
+              <!--- clock: --->
                 <a-entity id="clock" position="-0.10 0.512 -1.52">
                   <a-cylinder material="color: #FFF" rotation="0 0 90" radius="0.25" height="0.02"  toon="thickness:0.03" src="#clock-texture"></a-cylinder>
                   <a-entity id="hours" position="-0.01 0 0">
