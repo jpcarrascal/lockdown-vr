@@ -27,10 +27,10 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 }
 
 var startTime = -1;
-var BDLocation =  "https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FKD.mp3?v=1588237945368";
-var songLocation= "https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FLockdown-trim.mp3?v=1588058911173";
-var SDLocation= "https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FSD.mp3?v=1588237946201";
-var HHLocation= "https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FHH.mp3?v=1588237945143";
+var songLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLockdown-trim.mp3?v=1588790687348";
+var BDLocation =  "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKD.mp3?v=1588790685488";
+var SDLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSD.mp3?v=1588790686804";
+var HHLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHH.mp3?v=1588790683823";
 
 // Create a new audio context.
 var ctx = new AudioContext();
