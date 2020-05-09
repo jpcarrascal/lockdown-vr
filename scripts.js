@@ -1,19 +1,42 @@
 /* globals AFRAME, THREE */
-
+const debug = false;
 window.addEventListener('load', function() {
-  var start = document.querySelector('#start');
+  let start = document.querySelector('#start');
+  let vid = document.querySelector("#JPvid");
   document.querySelector('#action').pause();
-    start.addEventListener('click', function (e) {
-        startTime = 0;
-        const audioStartTime = Math.abs(startTime)/1000;
-        document.querySelector('#action').play();
-        BD.source.start(ctx.currentTime, audioStartTime, 194);
-        SD.source.start(ctx.currentTime, audioStartTime, 194);
-        HH.source.start(ctx.currentTime, audioStartTime, 194);
-        song.source.start(ctx.currentTime, audioStartTime, 194);
-        start.style.display = 'none';
-        //start.style.marginLeft = 0;
-    });
+  // Check if video is loaded. Source: http://atomicrobotdesign.com/blog/web-development/check-when-an-html5-video-has-loaded/
+  // could have used vid.addEventListener('loadeddata', function() {});
+  // but sometimed the video loads early and no more 'loadeddata' events are triggered.
+  function checkLoad() {
+      if (vid.readyState === 4) {
+        document.querySelector("#start").innerText="Play!";
+        start.addEventListener('click', function (e) {
+            document.querySelector('#action').play();
+            var playPromise = vid.play();
+            if (playPromise !== undefined) {
+            playPromise.then(function() {
+                // Only start BD, SD and HH playback when video playback is started
+                startTime = 0;
+                //const audioStartTime = Math.abs(startTime)/1000;
+                const audioStartTime = vid.currentTime;
+                BD.source.start(ctx.currentTime, audioStartTime, 194);
+                SD.source.start(ctx.currentTime, audioStartTime, 194);
+                HH.source.start(ctx.currentTime, audioStartTime, 194);
+                //song.source.start(ctx.currentTime, audioStartTime, 194);
+                start.style.display = 'none';
+                //start.style.marginLeft = 0;
+              }).catch(function(error) {
+                console.log("Error playing video!!!");
+              });
+            }
+        });
+      } else {
+          setTimeout(checkLoad, 100);
+      }
+  }
+
+  checkLoad();
+  
 });
 
 function debugThis(text)
@@ -27,7 +50,7 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 }
 
 var startTime = -1;
-var songLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLockdown-trim.mp3?v=1588790687348";
+// var songLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLockdown-trim.mp3?v=1588790687348";
 var BDLocation =  "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKD.mp3?v=1588790685488";
 var SDLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSD.mp3?v=1588790686804";
 var HHLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHH.mp3?v=1588790683823";
@@ -43,12 +66,14 @@ let shrinkingFactor = 0.9999915;
 var BD = {};
 var SD = {};
 var HH = {}
+/*
 var song = {};
 song.source = ctx.createBufferSource();
 song.volume = ctx.createGain();
 song.source.connect(song.volume);
 song.volume.connect(mainVolume);
 song.source.loop = false;
+*/
 
 BD.source = ctx.createBufferSource();
 BD.analyzer = ctx.createAnalyser();
@@ -78,12 +103,13 @@ async function setupSample(location) {
     return sample;
 }
 
+/*
 setupSample(songLocation)
     .then((sample) => {
       song.buffer = sample;
       song.source.buffer = song.buffer;
-      document.querySelector("#start").innerText="Play!";
 });
+*/
 
 setupSample(BDLocation)
     .then((sample) => {
@@ -302,7 +328,7 @@ AFRAME.registerComponent("scene-update", {
           console.log("Day! " + time);
           lightSequencer.setAttribute("light-sequencer",{running: false});
           switchCityLights(city,"off");
-          roomLightSwitch(city,"off");
+          roomLightSwitch("off");
           this.night = false;
         }
       }
@@ -328,7 +354,6 @@ AFRAME.registerComponent("room-boundaries", {
     
   },
   tick: function() {
-    let debug = false;
     let head = document.querySelector('#head');
     // Keep player inside the room:
     if(!debug)
