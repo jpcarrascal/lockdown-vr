@@ -61,8 +61,9 @@ var mainVolume = ctx.createGain();
 mainVolume.connect(ctx.destination);
 
 const worldFloor = -30;
-const T = 60000; // Time constant
+const T = 60000; // Time constant: 60000
 let shrinkingFactor = 0.9999915;
+var city;
 var BD = {};
 var SD = {};
 var HH = {}
@@ -191,9 +192,10 @@ AFRAME.registerComponent("scene-setup", {
       this.el.setAttribute("shadow", false);
       if( AFRAME.utils.device.isMobileVR() )
         document.querySelector('#cameraRig').object3D.position.y = 0.3;
-      this.el.object3D.add(notSoRandomCity("small"));
+      city = notSoRandomCity("small");
     } 
-    else this.el.object3D.add(notSoRandomCity("normal"));
+    else city = notSoRandomCity("normal");
+    this.el.object3D.add(city);
   }
 });
 
@@ -240,7 +242,6 @@ AFRAME.registerComponent("scene-update", {
     let hours = document.querySelector('#hours');
     let minutes = document.querySelector('#minutes');
     let lightSequencer = document.querySelector("#action");
-    let city = this.el.sceneEl.object3D.children[12];
 
     // Stuff that happens during the song. The song is 3:12 long (last hit at 3:03)
     if(time < 183100 && startTime >=0 )
@@ -375,6 +376,9 @@ AFRAME.registerComponent("sky-colors", {
     this.dawn = false;
   },
   init: function () {
+    this.nightSky = new Stars();
+    this.nightSky.setOpacity(0);
+    this.el.sceneEl.object3D.add(this.nightSky.stars);
     this.T = T;
     this.night = false;
     this.dusk = false;
@@ -384,11 +388,18 @@ AFRAME.registerComponent("sky-colors", {
     if(startTime == 0)
       startTime = time;
     time -= startTime;
+    let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
+    let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
+    const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Down boundaries
+    if(orbitCos < duskTop)
+    {
+      this.nightSky.stars.rotation.y=time/this.T;
+      this.nightSky.stars.rotation.z=-time/this.T;
+    }
+    
     if(time < 183100 && startTime >=0 )
     {
       let sky = document.querySelector('a-sky');
-      let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
-      let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
       /*
         Top and Mid colors for day, dawn and night:
                   Mid              Top
@@ -403,13 +414,12 @@ AFRAME.registerComponent("sky-colors", {
       const topNightR = 5, topNightG = 0, topNightB = 40;
       const midNightR = 20, midNightG = 0, midNightB = 60;
       
-      const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Down boundaries
-      
       let topRGB = "rgb(" + topDayR + "," + topDayG + "," + topDayB + ")";
       let midRGB = "rgb(" + midDayR + "," + midDayG + "," + midDayB + ")";      
       
       if(orbitCos < duskTop && orbitCos > duskMid) // Transition to dusk
       {
+        this.nightSky.setOpacity(orbitCos.map(duskMid, duskTop,0.5,0));
         let topR = Math.round(orbitCos.map(duskMid, duskTop, topDuskR, topDayR));
         let topG = Math.round(orbitCos.map(duskMid, duskTop, topDuskG, topDayG));
         let topB = Math.round(orbitCos.map(duskMid, duskTop, topDuskB, topDayB));
@@ -421,6 +431,7 @@ AFRAME.registerComponent("sky-colors", {
       }      
       else if(orbitCos < 0 && orbitCos > -0.1) // Transition to night
       {
+        this.nightSky.setOpacity(orbitCos.map(duskBottom, duskMid,1, 0.5));
         let topR = Math.round(orbitCos.map(duskBottom, duskMid, topNightR, topDuskR));
         let topG = Math.round(orbitCos.map(duskBottom, duskMid, topNightG, topDuskG));
         let topB = Math.round(orbitCos.map(duskBottom, duskMid, topNightB, topDuskB));
@@ -442,6 +453,38 @@ AFRAME.registerComponent("sky-colors", {
 });
 
 
+class Stars {
+  constructor() {
+    // From: https://aerotwist.com/tutorials/creating-particles-with-three-js/
+    // and THREE.js PointsMaterial page
+    var vertices = [];
+    const radius = 1900;
+    const range = 10;
+    for ( var i = 0; i < 80; i ++ ) {
+      var theta = THREE.Math.randFloatSpread(180);
+      var phi = THREE.Math.randFloatSpread(180);
+      var x = radius * Math.sin(theta) * Math.cos(phi);
+      var y = radius * Math.sin(theta) * Math.sin(phi);
+      var z = radius * Math.cos(theta);
+      vertices.push( x, y, z );
+    }
+    var geometry = new THREE.BufferGeometry();
+    geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+    var texture = new THREE.TextureLoader().load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparticle.png?v=1589106936463' );
+    var material = new THREE.PointsMaterial( { color: 0x888888,
+                                              size: 35,
+                                              map: texture,
+                                              blending: THREE.AdditiveBlending,
+                                              transparent: true,
+                                              opacity: 0.5
+                                             } );
+    this.stars = new THREE.Points( geometry, material );
+  }
+  setOpacity(opacity){
+    this.stars.material.opacity = opacity;
+  }
+}
+
 AFRAME.registerComponent("audio-update", {
   pause: function() {
     
@@ -452,7 +495,6 @@ AFRAME.registerComponent("audio-update", {
     this.peakCount = -1;
   },
   tick: function(time, deltaTime) {
-    let city = this.el.sceneEl.object3D.children[12];
     if(startTime == 0)
       startTime = time;
     time -= startTime;
@@ -521,8 +563,6 @@ AFRAME.registerComponent("light-sequencer", {
     this.j = 0;
   },
   tick: function(time, timeDelta) {
-    //let city = this.el.sceneEl.object3D.getObjectByName("city");
-    let city = this.el.sceneEl.object3D.children[12];
     let numBuildings = city.children.length;
     let interval = this.interval;
     let offInterval = this.offInterval;
@@ -778,6 +818,7 @@ function analyze(analyzer)
   */
   return(avgPowerDecibels);
 }
+
 
 /////////////////////////
 
