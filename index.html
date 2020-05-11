@@ -26,7 +26,7 @@
   </head>
   <body>
     
-      <a-scene id="scene" shadow audio-update scene-setup>
+      <a-scene id="scene" shadow audio-update scene-setup vr-mode-ui>
         <a-sky geometry="primitive: sphere; radius:2000"
           material="shader: threeColorGradientShader; topColor: rgba(0,192,255,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
         </a-sky>
@@ -34,23 +34,23 @@
         <a-entity id="action" scene-update sky-colors light-sequencer></a-entity>
         <a-assets>
           <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
-          <a-mixin id="black-wall" material="color: #000;" shadow="receive:false; cast:false"></a-mixin>
+          <a-mixin id="black-wall" material="color: #000; roughness:1;" shadow="receive:false; cast:false"></a-mixin>
           <a-mixin id="wood-color" material="color: #492900;"></a-mixin>
           <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSnare-tripod.glb?v=1588790687489"></a-asset-item>
           <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHihat-tripod.glb?v=1588790685367"></a-asset-item>
           <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKick-pedal.glb?v=1588790686001"></a-asset-item>
           <a-asset-item id="kdrum-leg-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKdrum-leg.glb?v=1588790685734"></a-asset-item>
-          <img id="parquet" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparquet00b.png?v=1588790688089" />
-          <img id="tile" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftile-texture.jpg?v=1588790683382" />
-          <img id="grass-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fgrass.jpg?v=1588790684785" />
-          <img id="street-block" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fblock.png?v=1588790688359" />
-          <img id="left-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLeft-wall.png?v=1588790684954" />
-          <img id="right-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FRight-wall.png?v=1588790684406" />
-          <img id="back-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBack-wall.jpg?v=1588790688055" />
-          <img id="clock-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fclock.png?v=1588790683549" />
-          <img id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
-          <img id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
-          <video id="JPvid" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
+          <img crossorigin="anonymous" id="parquet" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparquet00b.png?v=1588790688089" />
+          <img crossorigin="anonymous" id="tile" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftile-texture.jpg?v=1588790683382" />
+          <img crossorigin="anonymous" id="grass-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fgrass.jpg?v=1588790684785" />
+          <img crossorigin="anonymous" id="street-block" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fblock.png?v=1588790688359" />
+          <img crossorigin="anonymous" id="left-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLeft-wall.png?v=1588790684954" />
+          <img crossorigin="anonymous" id="right-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FRight-wall.png?v=1588790684406" />
+          <img crossorigin="anonymous" id="back-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBack-wall.jpg?v=1588790688055" />
+          <img crossorigin="anonymous" id="clock-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fclock.png?v=1588790683549" />
+          <img crossorigin="anonymous" id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
+          <img crossorigin="anonymous" id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
+          <video crossorigin="anonymous" id="JPvid" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
         </a-assets>
         
         <!-- room -->
@@ -134,9 +134,10 @@
         
         <a-entity id="objects-in-room" position="0 0 0"> <!-- non-shrinkable -->
 
-          <a-entity id="lamp-object" position="0 3 0">
+          <a-entity id="lamp-object" position="0 3 -0.5">
             <a-sphere id="lamp" position="0 -0.32 0" radius="0.15" color="#E0D0C0" shadow="cast:false;receive:false" material="shader:standard;side:double" toon="thickness:0.03; deep:false">
               <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.1; castShadow: true; decay:1; distance:40;"></a-entity>
+              <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
             </a-sphere>
             <a-cylinder mixin="wall" radius="0.005" height="0.4" position="0 -0.17 0"></a-cylinder>
             <a-cylinder mixin="wall" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.03; deep:false"></a-cylinder>
@@ -233,8 +234,36 @@
         --->
     </a-scene>
     
-  
-  <div id="start">Loading...</div>
-  
+  <div id="veil">
+    <div class="instructions">
+      <h1>
+        Lockdown - <a href="http://www.spacebarman.com" target="_blank" class="spacebarman">Spacebarman</a>
+      </h1>
+      <p>
+        On a laptop or desktop computer?<br />
+        Use 'WASD' keys or arrow keys to move, mouse to look.<br />
+        (Trackpad not recommended.)
+      </p>
+    </div>
+    
+    <div id="start" class="instructions myEnterVRButton">Loading...</div>
+ 
+    <div class="instructions">
+      <p>
+        <a href="https://twitter.com/intent/tweet?text=Lockdown, a VR experience by @spacebarman" target="_blank">Tweet this</a> &bull;
+        <!-- Sharingbutton Facebook -->
+        <a id="fb-share" href="#" target="_blank">Share on Facebook</a>
+
+      </p>
+      <p>
+        Spacebarman on:
+        <a href="spotify:artist:1o8zzq05yXKrsdQUrMzZdc" target="_blank">Spotify</a> &bull;
+        <a href="https://www.instagram.com/spacebarman" target="_blank">Instagram</a> &bull;
+        <a href="https://www.youtube.com/spacebarmanvideo" target="_blank">Youtube</a>
+        <br />
+      </p>
+    </div>
+    
+  </div>
   </body>
 </html>
