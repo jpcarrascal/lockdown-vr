@@ -223,7 +223,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
-    this.camRotZ = document.querySelector("#cameraRig").object3D.rotation.z;
+    //this.camRotZ = document.querySelector("#cameraRig").object3D.rotation.z; // WHYYYYYYYY!!!!
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 49) {
         roomLightSwitch();
@@ -264,8 +264,7 @@ AFRAME.registerComponent("scene-update", {
       document.querySelector("#room-shrink").object3D.scale.y = this.shrinkY * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
-      document.querySelector("#cameraRig").object3D.rotation.z = this.camRotZ * (1-time*99e-9);
-      
+      //document.querySelector("#cameraRig").object3D.rotation.z = this.camRotZ * (1-time*1e-9); // WHYYYYYYYY!!!!
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
       let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
@@ -314,7 +313,7 @@ AFRAME.registerComponent("scene-update", {
         {
           console.log("Dusk! " + time);
           lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dusk"});
-          console.log("sequencer starter")
+          console.log("Sequencer started")
           this.dusk = true;
         }
         else if (orbitSin > 0 && !this.dawn)
@@ -996,11 +995,11 @@ function wireframize(object, thickness=1, changeMaterial=true)
 
 var gradientMaps = ( function () {
   var textureLoader = new THREE.TextureLoader();
-  var threeTone = textureLoader.load( 'https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FthreeTone.jpg?v=1587227496658' );
+  var threeTone = textureLoader.load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FthreeTone.jpg?v=1588790683498' );
   threeTone.minFilter = THREE.NearestFilter;
   threeTone.magFilter = THREE.NearestFilter;
 
-  var fiveTone = textureLoader.load( 'https://cdn.glitch.com/b1074378-45f1-4f58-8a5a-8fe9b3de8387%2FfiveTone.jpg?v=1587227628182' );
+  var fiveTone = textureLoader.load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FfiveTone.jpg?v=1588790683738' );
   fiveTone.minFilter = THREE.NearestFilter;
   fiveTone.magFilter = THREE.NearestFilter;
 
