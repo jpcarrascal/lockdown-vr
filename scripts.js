@@ -368,10 +368,25 @@ AFRAME.registerComponent("room-boundaries", {
     {
       let headX = head.object3D.position.x;
       let headZ = head.object3D.position.z;
-      if( Math.abs(headX) > 2.5 * shrinkingFactor)
+      let boundary = 2.5 * shrinkingFactor * 0.9;
+      if(headX > boundary){
+          head.object3D.position.x = boundary;
+      }
+      if(headX < -boundary){
+          head.object3D.position.x = -boundary;
+      }
+      if(headZ > boundary){
+          head.object3D.position.z = boundary;
+      }
+      if(headZ < -boundary){
+          head.object3D.position.z = -boundary;
+      }
+// This takes the camera to the other side of the room:
+/*    if( Math.abs(headX) > 2.5 * shrinkingFactor)
         head.object3D.position.x = -(headX*0.9) * shrinkingFactor;
       if( Math.abs(headZ) > 2.5 * shrinkingFactor)
-        head.object3D.position.z = -(headZ*0.9) * shrinkingFactor;      
+        head.object3D.position.z = -(headZ*0.9) * shrinkingFactor;
+*/
     }
   }
 });

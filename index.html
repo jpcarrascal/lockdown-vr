@@ -35,7 +35,7 @@
         <a-assets>
           <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
           <a-mixin id="black-wall" material="color: #000; roughness:1;" shadow="receive:false; cast:false"></a-mixin>
-          <a-mixin id="wood-color" material="color: #492900;"></a-mixin>
+          <a-mixin id="wood-color" material="color: #492900;" shadow="receive:true; cast:false"></a-mixin>
           <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSnare-tripod.glb?v=1588790687489"></a-asset-item>
           <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHihat-tripod.glb?v=1588790685367"></a-asset-item>
           <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKick-pedal.glb?v=1588790686001"></a-asset-item>
@@ -145,7 +145,7 @@
           
           <a-entity id="drumkit" position="0.86 0 0.4" scale="1.3 1.3 1.3">
             <a-entity id="bass-drum" position="0 0.32 0" rotation="0 0 90">
-              <a-cylinder material="color: #900590" position="0 0 0" radius="0.3" height="0.4" toon="thickness:0.03"></a-cylinder>
+              <a-cylinder material="color: #900590" position="0 0 0" radius="0.3" height="0.4" toon="thickness:0.02"></a-cylinder>
               <a-cylinder position="0 0.2 0" radius="0.29" height="0.01" color="#FFF" shadow="cast:false;receive:false" src="#bass-drum-texture"></a-cylinder>
              <a-cylinder position="0 -0.2 0" radius="0.29" height="0.01" color="#000" shadow="cast:false;receive:false"></a-cylinder>
             </a-entity>
