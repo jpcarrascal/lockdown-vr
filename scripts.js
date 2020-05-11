@@ -1,43 +1,54 @@
 /* globals AFRAME, THREE */
 const debug = false;
 window.addEventListener('load', function() {
-  let start = document.querySelector('#start');
-  let vid = document.querySelector("#JPvid");
+  document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u=http://www.spacebarman.com";
   document.querySelector('#action').pause();
-  // Check if video is loaded. Source: http://atomicrobotdesign.com/blog/web-development/check-when-an-html5-video-has-loaded/
-  // could have used vid.addEventListener('loadeddata', function() {});
-  // but sometimed the video loads early and no more 'loadeddata' events are triggered.
-  function checkLoad() {
-      if (vid.readyState === 4) {
-        document.querySelector("#start").innerText="Play!";
-        start.addEventListener('click', function (e) {
-            document.querySelector('#action').play();
-            var playPromise = vid.play();
-            if (playPromise !== undefined) {
-            playPromise.then(function() {
-                // Only start BD, SD and HH playback when video playback is started
-                startTime = 0;
-                //const audioStartTime = Math.abs(startTime)/1000;
-                const audioStartTime = vid.currentTime;
-                BD.source.start(ctx.currentTime, audioStartTime, 194);
-                SD.source.start(ctx.currentTime, audioStartTime, 194);
-                HH.source.start(ctx.currentTime, audioStartTime, 194);
-                //song.source.start(ctx.currentTime, audioStartTime, 194);
-                start.style.display = 'none';
-                //start.style.marginLeft = 0;
-              }).catch(function(error) {
-                console.log("Error playing video!!!");
-              });
-            }
-        });
-      } else {
-          setTimeout(checkLoad, 100);
-      }
-  }
-
+  if( !AFRAME.utils.device.isMobile() && !AFRAME.utils.device.isMobileVR() ) document.querySelector(".a-enter-vr").style.display='none';
   checkLoad();
-  
 });
+
+// enter-vr and exit-vr:
+document.querySelector('a-scene').addEventListener('enter-vr', function () {
+   console.log("ENTERED VR");
+});
+
+// Checks if video is loaded. Source: http://atomicrobotdesign.com/blog/web-development/check-when-an-html5-video-has-loaded/
+// could have used vid.addEventListener('loadeddata', function() {});
+// but sometimed the video loads early and no more 'loadeddata' events are not triggered anymore.
+function checkLoad() {
+  let vid = document.querySelector("#JPvid");
+  let start = document.querySelector('#start');
+  let veil = document.querySelector('#veil');
+  let mobile = ( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
+  if(!mobile) document.querySelector(".a-enter-vr").style.display='none';
+  //  document.querySelector("a-scene").setAttribute("vr-mode-ui",{enterVRButton: "#start"})
+  //class="a-enter-vr-button"
+  if (vid.readyState === 4) {
+    document.querySelector("#start").innerText="Play!";
+    start.addEventListener('click', function (e) {
+      document.querySelector('#action').play();
+      var playPromise = vid.play();
+      if (playPromise !== undefined) {
+        playPromise.then(function() {
+          // Only start BD, SD and HH playback when video playback is started
+          startTime = 0;
+          //const audioStartTime = Math.abs(startTime)/1000;
+          const audioStartTime = vid.currentTime;
+          BD.source.start(ctx.currentTime, audioStartTime, 194);
+          SD.source.start(ctx.currentTime, audioStartTime, 194);
+          HH.source.start(ctx.currentTime, audioStartTime, 194);
+          //song.source.start(ctx.currentTime, audioStartTime, 194);
+          veil.style.display = 'none';
+        }).catch(function(error) {
+          console.log("Error playing video!!!");
+        });
+      }
+      });
+    } else {
+        setTimeout(checkLoad, 100);
+    }
+}
+
 
 function debugThis(text)
 {
@@ -320,7 +331,6 @@ AFRAME.registerComponent("scene-update", {
         if(!this.night && orbitCos < duskMid)
         {
           lightSequencer.setAttribute("light-sequencer",{running: false});
-          roomLightSwitch("on");
           console.log("Night! " + time);
           this.night = true;
         }
@@ -329,17 +339,14 @@ AFRAME.registerComponent("scene-update", {
           console.log("Day! " + time);
           lightSequencer.setAttribute("light-sequencer",{running: false});
           switchCityLights(city,"off");
-          roomLightSwitch("off");
           this.night = false;
         }
       }
       if(time > 178000) lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dawn"});
       
     }
-    else if(time > 189000 && time < 189100)
-      roomLightSwitch("off");
-    else if(time > 189100 && time < 189200)
-      roomLightSwitch("on");
+    //else if(time > 189000 && time < 189100)
+    //else if(time > 189100 && time < 189200)
     else if(time>189200)
     {
       roomLightSwitch("off");
@@ -472,7 +479,7 @@ class Stars {
     geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
     var texture = new THREE.TextureLoader().load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparticle.png?v=1589106936463' );
     var material = new THREE.PointsMaterial( { color: 0x888888,
-                                              size: 35,
+                                              size: 40,
                                               map: texture,
                                               blending: THREE.AdditiveBlending,
                                               transparent: true,
