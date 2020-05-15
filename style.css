@@ -22,7 +22,6 @@ body {
   font-family: "Trebuchet MS";
   font-size: 1em;
   background-color: rgba(0,0,0,0.6);
-  user-select: none;
 }
 
 #start {
