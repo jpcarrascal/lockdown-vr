@@ -18,6 +18,7 @@
       href="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ffavicon.ico?v=1588790683613" />
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/SVGLoader.js"></script>
   
     <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
  
@@ -27,7 +28,7 @@
   <body>
     
       <a-scene id="scene" shadow audio-update scene-setup vr-mode-ui>
-        <a-sky geometry="primitive: sphere; radius:2000"
+        <a-sky geometry="primitive: sphere; radius:5000"
           material="shader: threeColorGradientShader; topColor: rgba(0,192,255,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
         </a-sky>
         <!-- <a-sphere radius="1900" color="white" material="side: back; opacity:0.5; transparent:true; emissive:#FFF "></a-sphere>-->
@@ -182,10 +183,10 @@
         
         <!-- world -->
         <a-entity id="world">
-          <a-triangle color="#205"  vertex-c="-800 -50 -500"  vertex-b="-400 5 -500" vertex-a="500 -50 -500"  ></a-triangle>
-          <a-triangle color="#205"  vertex-c="-600 -50 -500"  vertex-b="-100 20 -500"    vertex-a="500 -50 -500"  ></a-triangle>
-          <a-triangle color="#205"  vertex-c="0 -50 -500" vertex-b="200 30 -500" vertex-a="800 -50 -500" ></a-triangle>
-          <a-triangle color="#205"  vertex-c="200 -50 -500" vertex-b="600 5 -500" vertex-a="1000 -50 -500" ></a-triangle>
+          <a-triangle id="mountain1" color="#205"  vertex-c="-800 -50 -500"  vertex-b="-400 5 -500" vertex-a="500 -50 -500"  ></a-triangle>
+          <a-triangle id="mountain2" color="#205"  vertex-c="-600 -50 -500"  vertex-b="-100 20 -500"    vertex-a="500 -50 -500"  ></a-triangle>
+          <a-triangle id="mountain3" color="#205"  vertex-c="0 -50 -500" vertex-b="200 30 -500" vertex-a="800 -50 -500" ></a-triangle>
+          <a-triangle id="mountain4" color="#205"  vertex-c="200 -50 -500" vertex-b="600 5 -500" vertex-a="1000 -50 -500" ></a-triangle>
 
           <a-circle id="bottom" material="src:#street-block; color: #888; roughness: 1; repeat:9 13;" position="0 -30 52" rotation="-90 0 0" radius="950" shadow="receive:true; cast:false"></a-circle>
           <!-- park -->
@@ -198,7 +199,9 @@
 
           <a-entity id="ambient" light="type: ambient; color: #FFF; intensity:0.1"></a-entity>
           <a-entity position="0 0 -2.5" id="street-light" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
-          <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 0.5; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
+          <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 1; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
+          
+          <a-entity id="lightning" light="type: point; color: #DEF; intensity: 0; distance: 20; castShadow: true;" position="0 3 -5"></a-entity>
           
           <!-- billboard -->
           <a-entity id="billboard" position="0 -7 -32">

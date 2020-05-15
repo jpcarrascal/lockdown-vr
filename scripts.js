@@ -1,5 +1,5 @@
 /* globals AFRAME, THREE */
-const debug = false;
+var debug = false;
 window.addEventListener('load', function() {
   document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u=http://www.spacebarman.com";
   document.querySelector('#action').pause();
@@ -207,6 +207,8 @@ AFRAME.registerComponent("scene-setup", {
     } 
     else city = notSoRandomCity("normal");
     this.el.object3D.add(city);
+    let cloud = randomClouds();
+    this.el.object3D.add(cloud);
   }
 });
 
@@ -224,6 +226,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     //this.camRotZ = document.querySelector("#cameraRig").object3D.rotation.z; // WHYYYYYYYY!!!!
+    this.flashOn = false;
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 49) {
         roomLightSwitch();
@@ -249,6 +252,7 @@ AFRAME.registerComponent("scene-update", {
     let ambient = document.querySelector('#ambient');
     let sunlight = document.querySelector('#sunlight');
     let sunlight2 = document.querySelector('#sunlight2');
+    let lightning = document.querySelector('#lightning');
     let streetLight = document.querySelector('#street-light');
     let hours = document.querySelector('#hours');
     let minutes = document.querySelector('#minutes');
@@ -281,32 +285,14 @@ AFRAME.registerComponent("scene-update", {
       else sunFade = orbitCos.map(0.2, -0.2, 1, 0);
 
       sunlight.setAttribute("light", {intensity: sunFade});
-      sunlight2.setAttribute("light", {intensity: 0.5*sunFade });      
+      sunlight2.setAttribute("light", {intensity: 1*sunFade });      
 
       if(orbitCos > 0)
         ambient.setAttribute("light", {intensity: sunFade-0.4 })
       else
         ambient.setAttribute("light", {intensity: 0 });
       
-      /*
-        Night lights:
-        Dusk! 20008
-        Night! 31919
-        Dawn! 88100
-        Day! 100008
-        Dusk! 140032
-        Night! 151926
-        End: 2:58
-      */
-      const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Down boundaries
-      /*
-      if(time > 20008 && time < 31919)   lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dusk"});
-      if(time > 31919 && time < 88100)   lightSequencer.setAttribute("light-sequencer",{running: false});
-      if(time > 88100 && time < 100008)  lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dawn"});
-      if(time > 100008 && time < 140032) lightSequencer.setAttribute("light-sequencer",{running: false});
-      if(time > 140032 && time < 151926) lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dusk"});
-      if(time > 178000) lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dawn"});
-      */
+      const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Dusk/Dawn boundaries
       if(orbitCos < duskTop && orbitCos > duskBottom)
       {
         if(orbitSin < 0 && !this.dusk)
@@ -342,6 +328,28 @@ AFRAME.registerComponent("scene-update", {
         }
       }
       if(time > 178000) lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dawn"});
+      
+      /*
+      if(time > 4000 && time < 12000)
+      {
+        if(!this.flashOn)
+        {
+          if(Math.random() > 0.9)
+          {
+            console.log("LIGHTNING on " + this.flashOn)
+            lightning.object3D.intensity = 1;
+            lightning.setAttribute("light", {intensity: 1 });
+            this.flashOn = true;
+          }
+        }
+        else
+        {
+          console.log("--------- off " + this.flashOn);
+          lightning.object3D.intensity = 0;
+          lightning.setAttribute("light", {intensity: 0 });
+          this.flashOn = false;
+        }        
+      }*/
       
     }
     //else if(time > 189000 && time < 189100)
@@ -468,7 +476,6 @@ AFRAME.registerComponent("sky-colors", {
         midRGB = "rgb(" + midNightR + "," + midNightG + "," + midNightB + ")";
       }
       sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });
-
     }
   }
 });
@@ -505,6 +512,7 @@ class Stars {
     this.stars.material.opacity = opacity;
   }
 }
+
 
 AFRAME.registerComponent("audio-update", {
   pause: function() {
@@ -715,7 +723,6 @@ function switchCityLights(city, mode, val=0)
 function notSoRandomCity(size="normal")
 {
   var city = new THREE.Group();  
-  let scene = document.querySelector('a-scene').object3D;
   let maxBlocksPerSide = 3;
   let sideBuildingsBaseHeight = 2;
   let maxFloors = 0;
@@ -814,6 +821,49 @@ class Building {
     toonize(this.building,0.005, false);
   }
 }
+
+
+// Clouds:
+function randomClouds()
+{
+  
+  const map = (val, smin, smax, emin, emax) => (emax-emin)*(val-smin)/(smax-smin) + emin
+  //randomly displace the x,y,z coords by the `per` value
+  const jitter = (geo,per1,per2) => geo.vertices.forEach(v => {
+      v.x += map(Math.random(),0,1,-per2,per2)
+      v.y += map(Math.random(),0,1,-per1,per1)
+      //v.z += map(Math.random(),0,1,-per,per)
+  })
+  
+  const material =  new THREE.MeshLambertMaterial({
+        color:'white',
+        flatShading:true,
+        transparent: true,
+        opacity: 0.3
+  });
+  var cloud = new THREE.Mesh(new THREE.CircleGeometry(100,7,8), material);
+  cloud.updateMatrix();
+  
+  var tuft1 = new THREE.Mesh(new THREE.SphereGeometry(100,7,8), material);
+  tuft1.position.x = -2000;
+  //tuft1.rotation.y = Math.PI/2;
+  tuft1.updateMatrix(); // as needed
+  cloud.geometry.merge(tuft1.geometry, tuft1.matrix);
+
+  var tuft2 = new THREE.Mesh(new THREE.SphereGeometry(100,7,8), material);
+  tuft2.position.x = 2000;
+  //tuft2.rotation.y = -Math.PI/2;
+  tuft2.updateMatrix(); // as needed
+  cloud.geometry.merge(tuft2.geometry, tuft2.matrix);
+  console.log(cloud.geometry);
+
+  jitter(cloud.geometry,20,1500)
+  cloud.position.z = -600;
+  cloud.position.y = 50;//+THREE.Math.randFloatSpread(30);
+  cloud.name="cloud!";
+  return cloud;
+}
+
 
 
 // https://stackoverflow.com/questions/44360301/web-audio-api-creating-a-peak-meter-with-analysernode
@@ -1014,6 +1064,7 @@ var gradientMaps = ( function () {
 
 /////////////// From Three.js effects examples
 /////////////// https://threejs.org/examples/#webgl_materials_variations_toon
+/*
 	var uniformsOutline = {
 		outlineThickness: { value: THREE.defaultThickness },
 		outlineColor: { value: new THREE.Color( 0x000000 ) },
@@ -1109,3 +1160,56 @@ var gradientMaps = ( function () {
 		} );
 
 	}
+  
+// Horrible function not working anyway:  
+function cloudsSVG(scene)
+{
+  var loader = new THREE.SVGLoader();
+  loader.load(
+	// resource URL
+	'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FCloud1.svg?v=1589379677158',
+	// called when the resource is loaded
+    function ( data ) {
+      var paths = data.paths;
+      var group = new THREE.Group();
+      var material = new THREE.MeshBasicMaterial( {
+        color: 0xff0000,
+        side: THREE.DoubleSide,
+        depthWrite: false
+      } );
+      for ( var i = 0; i < paths.length; i ++ ) {
+        var path = paths[ i ];
+        var shapes = path.toShapes( true );
+        for ( var j = 0; j < shapes.length; j ++ ) {
+          var shape = shapes[ j ];
+          var geometry = new THREE.ShapeBufferGeometry( shape );
+          var mesh = new THREE.Mesh( geometry, material );
+          group.add( mesh );
+        }
+
+      }
+      group.position.x = 0;
+      group.position.y = 0;
+      group.position.z = 0;
+      group.scale.set(100,100,100);
+      group.name = "Cloud1";
+      scene.add(group);
+      console.log(group);
+
+    },
+    // called when loading is in progresses
+    function ( xhr ) {
+
+      console.log("Cloud " + ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+    },
+	// called when loading has errors
+    function ( error ) {
+
+      console.log( 'An error happened' );
+
+    }
+  );
+}
+  
+  */
