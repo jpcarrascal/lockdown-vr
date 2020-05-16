@@ -32,7 +32,7 @@
           material="shader: threeColorGradientShader; topColor: rgba(0,192,255,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
         </a-sky>
         <!-- <a-sphere radius="1900" color="white" material="side: back; opacity:0.5; transparent:true; emissive:#FFF "></a-sphere>-->
-        <a-entity id="action" scene-update sky-colors light-sequencer></a-entity>
+        <a-entity id="action" scene-update sky light-sequencer></a-entity>
         <a-assets>
           <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
           <a-mixin id="black-wall" material="color: #000; roughness:1;" shadow="receive:false; cast:false"></a-mixin>
@@ -200,8 +200,6 @@
           <a-entity id="ambient" light="type: ambient; color: #FFF; intensity:0.1"></a-entity>
           <a-entity position="0 0 -2.5" id="street-light" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
           <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 1; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
-          
-          <a-entity id="lightning" light="type: point; color: #DEF; intensity: 0; distance: 20; castShadow: true;" position="0 3 -5"></a-entity>
           
           <!-- billboard -->
           <a-entity id="billboard" position="0 -7 -32">
