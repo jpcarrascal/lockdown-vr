@@ -24,7 +24,7 @@ function checkLoad() {
   //  document.querySelector("a-scene").setAttribute("vr-mode-ui",{enterVRButton: "#start"})
   //class="a-enter-vr-button"
   if (vid.readyState === 4) {
-    document.querySelector("#start").innerText="Play!";
+    document.querySelector("#start").innerText="Start!";
     start.addEventListener('click', function (e) {
       document.querySelector('#action').play();
       var playPromise = vid.play();
@@ -265,6 +265,7 @@ AFRAME.registerComponent("scene-update", {
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
       //document.querySelector("#cameraRig").object3D.rotation.z = this.camRotZ * (1-time*1e-9); // WHYYYYYYYY!!!!
+      document.querySelector("#cameraRig").object3D.rotation.z += 0.000012;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
       let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
@@ -420,8 +421,9 @@ AFRAME.registerComponent("sky", {
       this.starField.stars.rotation.z=-time/this.T;
     }
     // Cloudfield movement
-    this.cloudField.clouds.rotation.y=-time/this.T;
+    this.cloudField.clouds.rotation.y=-time/(this.T*0.35);
     this.cloudField.lightnings.rotation.y=this.cloudField.clouds.rotation.y;
+    
     if(time < 183100 && startTime >=0 )
     {     
       topRGB = "rgb(" + topDayR + "," + topDayG + "," + topDayB + ")";
@@ -466,13 +468,13 @@ AFRAME.registerComponent("sky", {
       }
       sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });
       
-      if(time > 154500 && time < 169000)
+      if(time > 154500 && time < 169000) // if(time > 154500 && time < 169000)
       {
         if(!this.flashOn)
         {
           if(Math.random() > 0.9)
           {
-            this.cloudField.randomLightningOn()
+            this.cloudField.lightningsOn()
             console.log("LIGHTNING on " + this.flashOn)
             this.flashOn = true;
           }
@@ -632,6 +634,15 @@ class CloudField{
     l.twitch(l);
     l.material.visible = true;
     this.clouds.children[pick].material.opacity = 0.8;
+    this.flash.intensity = 1;
+  }
+  lightningsOn() {
+    for(var i=0;i<this.lightnings.children.length;i++)
+    {
+      this.lightnings.children[i].twitch();
+      this.clouds.children[i].material.opacity = 0.8;
+      this.lightnings.children[i].material.visible = true;
+    }
     this.flash.intensity = 1;
   }
   lightningsOff() {
