@@ -207,8 +207,6 @@ AFRAME.registerComponent("scene-setup", {
     } 
     else city = notSoRandomCity("normal");
     this.el.object3D.add(city);
-    let cloud = randomClouds();
-    this.el.object3D.add(cloud);
   }
 });
 
@@ -226,7 +224,6 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     //this.camRotZ = document.querySelector("#cameraRig").object3D.rotation.z; // WHYYYYYYYY!!!!
-    this.flashOn = false;
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 49) {
         roomLightSwitch();
@@ -252,7 +249,6 @@ AFRAME.registerComponent("scene-update", {
     let ambient = document.querySelector('#ambient');
     let sunlight = document.querySelector('#sunlight');
     let sunlight2 = document.querySelector('#sunlight2');
-    let lightning = document.querySelector('#lightning');
     let streetLight = document.querySelector('#street-light');
     let hours = document.querySelector('#hours');
     let minutes = document.querySelector('#minutes');
@@ -328,29 +324,6 @@ AFRAME.registerComponent("scene-update", {
         }
       }
       if(time > 178000) lightSequencer.setAttribute("light-sequencer",{running: true, mode: "dawn"});
-      
-      /*
-      if(time > 4000 && time < 12000)
-      {
-        if(!this.flashOn)
-        {
-          if(Math.random() > 0.9)
-          {
-            console.log("LIGHTNING on " + this.flashOn)
-            lightning.object3D.intensity = 1;
-            lightning.setAttribute("light", {intensity: 1 });
-            this.flashOn = true;
-          }
-        }
-        else
-        {
-          console.log("--------- off " + this.flashOn);
-          lightning.object3D.intensity = 0;
-          lightning.setAttribute("light", {intensity: 0 });
-          this.flashOn = false;
-        }        
-      }*/
-      
     }
     //else if(time > 189000 && time < 189100)
     //else if(time > 189100 && time < 189200)
@@ -398,20 +371,25 @@ AFRAME.registerComponent("room-boundaries", {
   }
 });
 
-AFRAME.registerComponent("sky-colors", {
+AFRAME.registerComponent("sky", {
   pause: function() {
     this.night = false;
     this.dusk = false;
     this.dawn = false;
   },
   init: function () {
-    this.nightSky = new Stars();
-    this.nightSky.setOpacity(0);
-    this.el.sceneEl.object3D.add(this.nightSky.stars);
+    this.starField = new StarField();
+    this.cloudField = new CloudField();
+    this.starField.setOpacity(0);
+    this.el.sceneEl.object3D.add(this.starField.stars);
+    this.el.sceneEl.object3D.add(this.cloudField.clouds);
+    this.el.sceneEl.object3D.add(this.cloudField.lightnings);
+    this.el.sceneEl.object3D.add(this.cloudField.flash);
     this.T = T;
     this.night = false;
     this.dusk = false;
     this.dawn = false;
+    this.flashOn = false;
   },
   tick: function(time, deltaTime) {
     if(startTime == 0)
@@ -419,36 +397,39 @@ AFRAME.registerComponent("sky-colors", {
     time -= startTime;
     let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
     let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
+    /*
+      Top and Mid colors for day, dawn and night:
+                Mid              Top
+      Day:   rgba(87,191,255) rgba(137,232,255)
+      Dusk/Dawn:  rgba(248,84,255) rgba(35,168,255) 
+      Night: rgba(6,0,66)     rgba(35,0,93)    
+    */
+    const topDayR = 137,   topDayG = 232,   topDayB = 255;
+    const midDayR = 87,   midDayG = 191,   midDayB = 255;
+    const topDuskR = 35,  topDuskG = 168,  topDuskB = 255;
+    const midDuskR = 248,  midDuskG = 84,  midDuskB = 255;
+    const topNightR = 5, topNightG = 0, topNightB = 40;
+    const midNightR = 20, midNightG = 0, midNightB = 60;
     const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Down boundaries
+    let topRGB, midRGB;
+    let sky = document.querySelector('a-sky');
     if(orbitCos < duskTop)
     {
-      this.nightSky.stars.rotation.y=time/this.T;
-      this.nightSky.stars.rotation.z=-time/this.T;
+      // Starfield rotation
+      this.starField.stars.rotation.y=time/this.T;
+      this.starField.stars.rotation.z=-time/this.T;
     }
-    
+    // Cloudfield movement
+    this.cloudField.clouds.rotation.y=-time/this.T;
+    this.cloudField.lightnings.rotation.y=this.cloudField.clouds.rotation.y;
     if(time < 183100 && startTime >=0 )
-    {
-      let sky = document.querySelector('a-sky');
-      /*
-        Top and Mid colors for day, dawn and night:
-                  Mid              Top
-        Day:   rgba(87,191,255) rgba(137,232,255)
-        Dusk/Dawn:  rgba(248,84,255) rgba(35,168,255) 
-        Night: rgba(6,0,66)     rgba(35,0,93)    
-      */
-      const topDayR = 137,   topDayG = 232,   topDayB = 255;
-      const midDayR = 87,   midDayG = 191,   midDayB = 255;
-      const topDuskR = 35,  topDuskG = 168,  topDuskB = 255;
-      const midDuskR = 248,  midDuskG = 84,  midDuskB = 255;
-      const topNightR = 5, topNightG = 0, topNightB = 40;
-      const midNightR = 20, midNightG = 0, midNightB = 60;
-      
-      let topRGB = "rgb(" + topDayR + "," + topDayG + "," + topDayB + ")";
-      let midRGB = "rgb(" + midDayR + "," + midDayG + "," + midDayB + ")";      
+    {     
+      topRGB = "rgb(" + topDayR + "," + topDayG + "," + topDayB + ")";
+      midRGB = "rgb(" + midDayR + "," + midDayG + "," + midDayB + ")";      
       
       if(orbitCos < duskTop && orbitCos > duskMid) // Transition to dusk
       {
-        this.nightSky.setOpacity(orbitCos.map(duskMid, duskTop,0.5,0));
+        this.starField.setOpacity(orbitCos.map(duskMid, duskTop, 0.5, 0));
         let topR = Math.round(orbitCos.map(duskMid, duskTop, topDuskR, topDayR));
         let topG = Math.round(orbitCos.map(duskMid, duskTop, topDuskG, topDayG));
         let topB = Math.round(orbitCos.map(duskMid, duskTop, topDuskB, topDayB));
@@ -456,11 +437,12 @@ AFRAME.registerComponent("sky-colors", {
         let midG = Math.round(orbitCos.map(duskMid, duskTop, midDuskG, midDayG));
         let midB = Math.round(orbitCos.map(duskMid, duskTop, midDuskB, midDayB));
         topRGB = "rgb(" + topR + "," + topG + "," + topB + ")";
-        midRGB = "rgb(" + midR + "," + midG + "," + midB + ")";  
+        midRGB = "rgb(" + midR + "," + midG + "," + midB + ")";
       }      
       else if(orbitCos < 0 && orbitCos > -0.1) // Transition to night
       {
-        this.nightSky.setOpacity(orbitCos.map(duskBottom, duskMid,1, 0.5));
+        this.starField.setOpacity(orbitCos.map(duskBottom, duskMid,1, 0.5));
+        this.cloudField.setOpacity(orbitCos.map(duskBottom, duskMid, 0.05, 0.3));
         let topR = Math.round(orbitCos.map(duskBottom, duskMid, topNightR, topDuskR));
         let topG = Math.round(orbitCos.map(duskBottom, duskMid, topNightG, topDuskG));
         let topB = Math.round(orbitCos.map(duskBottom, duskMid, topNightB, topDuskB));
@@ -472,22 +454,55 @@ AFRAME.registerComponent("sky-colors", {
       }      
       else if(orbitCos < -0.1) // Night
       {
+        this.starField.setOpacity(1);
+        //this.cloudField.setOpacity(0.1);
         topRGB = "rgb(" + topNightR + "," + topNightG + "," + topNightB + ")";
         midRGB = "rgb(" + midNightR + "," + midNightG + "," + midNightB + ")";
       }
+      else // Day
+      {
+        this.starField.setOpacity(0);
+        //this.cloudField.setOpacity(0.3);
+      }
       sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });
+      
+      if(time > 154500 && time < 169000)
+      {
+        if(!this.flashOn)
+        {
+          if(Math.random() > 0.9)
+          {
+            this.cloudField.randomLightningOn()
+            console.log("LIGHTNING on " + this.flashOn)
+            this.flashOn = true;
+          }
+        }
+        else
+        {
+          console.log("--------- off " + this.flashOn);
+          this.cloudField.lightningsOff()
+          this.flashOn = false;
+        }        
+      }
+      
+      
+    }
+    else
+    {
+        topRGB = "rgb(" + topNightR + "," + topNightG + "," + topNightB + ")";
+        midRGB = "rgb(" + midNightR + "," + midNightG + "," + midNightB + ")";
+        sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });      
     }
   }
 });
 
 
-class Stars {
+class StarField {
   constructor() {
     // From: https://aerotwist.com/tutorials/creating-particles-with-three-js/
     // and THREE.js PointsMaterial page
     var vertices = [];
     const radius = 1900;
-    const range = 10;
     for ( var i = 0; i < 80; i ++ ) {
       var theta = THREE.Math.randFloatSpread(180);
       var phi = THREE.Math.randFloatSpread(180);
@@ -513,6 +528,164 @@ class Stars {
   }
 }
 
+// Clouds:
+class CloudField{
+  constructor(opacity=0.3) {
+    this.baseOpacity = opacity;
+    // From: https://medium.com/@joshmarinacci/procedural-geometry-low-poly-clouds-b86a0e66bcad
+    //randomly displace the x,y,z coords by the `per` value
+    const jitter = (geo, jitterX=0, jitterY=0, jitterZ=0) => geo.vertices.forEach(v => {
+        v.x += Math.random().map(0,1,-jitterX,jitterX)
+        v.y += Math.random().map(0,1,-jitterY,jitterY)
+        v.z += Math.random().map(0,1,-jitterZ,jitterZ)
+    })
+
+    this.clouds = new THREE.Group();
+    this.lightnings = new THREE.Group();
+     
+    const cloudRadius = 40;
+    const vertexes = 10;
+    const jitterX = 20;
+    const jitterY = 20;
+    const elongation = 12;
+    let cloudF = new THREE.Mesh(new THREE.CircleGeometry(cloudRadius,vertexes),
+                                new THREE.MeshBasicMaterial({
+                                  color:'white',
+                                  transparent: true,
+                                  opacity: 0.3,
+                                }));
+    cloudF.position.z = -600;
+    cloudF.position.y = 100;
+    cloudF.scale.set(elongation,1,1);
+    jitter(cloudF.geometry,jitterX,jitterY);
+    cloudF.updateMatrix();
+    this.clouds.add(cloudF);
+    
+    let cloudB = new THREE.Mesh(new THREE.CircleGeometry(cloudRadius,vertexes), 
+                                new THREE.MeshBasicMaterial({
+                                  color:'white',
+                                  transparent: true,
+                                  opacity: 0.3,
+                                }));
+    cloudB.position.z = 600;
+    cloudB.position.y = 100;
+    cloudB.rotation.y = Math.PI;
+    cloudB.scale.set(elongation,1,1);
+    jitter(cloudB.geometry,jitterX,jitterY);
+    this.clouds.add(cloudB);
+
+    let cloudL = new THREE.Mesh(new THREE.CircleGeometry(cloudRadius,vertexes), 
+                                new THREE.MeshBasicMaterial({
+                                  color:'white',
+                                  transparent: true,
+                                  opacity: 0.3,
+                                }));
+    cloudL.rotation.y = Math.PI/2;
+    cloudL.position.x = -600;
+    cloudL.position.y = 100;
+    cloudL.scale.set(elongation,1,1);
+    jitter(cloudL.geometry,jitterX,jitterY);
+    this.clouds.add(cloudL);
+
+    let cloudR = new THREE.Mesh(new THREE.CircleGeometry(cloudRadius,vertexes), 
+                                new THREE.MeshBasicMaterial({
+                                  color:'white',
+                                  transparent: true,
+                                  opacity: 0.3,
+                                }));
+    cloudR.rotation.y = -Math.PI/2;
+    cloudR.position.x = 600;
+    cloudR.position.y = 100;
+    cloudR.scale.set(elongation,1,1);
+    //cloudR.updateMatrix();
+    jitter(cloudR.geometry,jitterX,jitterY);
+    this.clouds.add(cloudR);
+    
+    let lightning = new Lightning(cloudF.position.x, cloudF.position.y, cloudF.position.z, -130);
+    lightning.material.visible = false;
+    this.lightnings.add(lightning);
+    lightning = new Lightning(cloudB.position.x, cloudB.position.y, cloudB.position.z, -130);
+    lightning.material.visible = false;
+    this.lightnings.add(lightning);
+    lightning = new Lightning(cloudL.position.x, cloudL.position.y, cloudL.position.z, -130);
+    lightning.material.visible = false;
+    this.lightnings.add(lightning);
+    lightning = new Lightning(cloudR.position.x, cloudR.position.y, cloudR.position.z, -130);
+    lightning.material.visible = false;
+    this.lightnings.add(lightning);
+    
+    //light="type: point; color: #DEF; intensity: 0; distance: 20; castShadow: true;" position="0 3 -5"
+    this.flash = new THREE.PointLight( 0xddeeff, 0, 100 );
+    this.flash.position.set(0, 3, -50);
+
+    //+THREE.Math.randFloatSpread(30);
+    this.clouds.name="clouds!";
+  }
+  setOpacity(opacity) {
+    this.baseOpacity = opacity;
+    for(var i=0;i<this.clouds.children.length;i++)
+      this.clouds.children[i].material.opacity = opacity;
+  }
+  randomLightningOn() {
+    let pick = Math.round(Math.random()*3);
+    let l = this.lightnings.children[pick];
+    l.twitch(l);
+    l.material.visible = true;
+    this.clouds.children[pick].material.opacity = 0.8;
+    this.flash.intensity = 1;
+  }
+  lightningsOff() {
+    for(var i=0;i<this.lightnings.children.length;i++)
+    {
+      this.clouds.children[i].material.opacity = this.baseOpacity;
+      this.lightnings.children[i].material.visible = false;
+    }
+    this.flash.intensity = 0;
+  }
+  twitch(flash){
+    let geom = flash.geometry;
+    for(let i=1; i<geom.vertices.length; i++)
+    {
+      geom.vertices[i].x = this.x+((Math.random()-0.5)*10);
+      geom.vertices[i].z = this.z+((Math.random()-0.5)*10);
+    }
+    geom.verticesNeedUpdate = true;
+  }
+}
+
+class Lightning extends THREE.Line{
+  constructor(x=0, y=30, z=-20, ground=-30) {
+    // From: https://aerotwist.com/tutorials/creating-particles-with-three-js/
+    // and THREE.js PointsMaterial page
+    super();
+    this.x = x;
+    this.y = y;
+    this.z= z;
+    let segments = 20;
+    let vertices = [];
+    let segmentLengh = (this.y - ground)/segments;
+    let vx = this.x, vy = this.y, vz = this.z;
+    for ( var i = 0; i < segments; i ++ ) {
+      vertices.push( new THREE.Vector3( vx, vy, vz ) );
+      vx += ((Math.random()-0.5)*10);
+      vy = (this.y-i*segmentLengh)+(Math.random()-0.5)*segmentLengh;
+      vz += ((Math.random()-0.5)*10);
+    }
+    vertices.push( new THREE.Vector3( vx, ground, vz ) );
+    this.geometry = new THREE.Geometry().setFromPoints( vertices );
+    this.material = new THREE.LineBasicMaterial( { color: 0xfefeff } );
+    //this.flash = new THREE.Line( geometry, material );
+  }
+  twitch(){
+    let geom = this.geometry;
+    for(let i=1; i<geom.vertices.length; i++)
+    {
+      geom.vertices[i].x = this.x+((Math.random()-0.5)*10);
+      geom.vertices[i].z = this.z+((Math.random()-0.5)*10);
+    }
+    geom.verticesNeedUpdate = true;
+  }
+}
 
 AFRAME.registerComponent("audio-update", {
   pause: function() {
@@ -543,12 +716,8 @@ AFRAME.registerComponent("audio-update", {
           this.peak = true;
           if(time > 154500 && time < 168500) // 2:34:500  2:48.500
             switchCityLights(city,"seq",this.peakCount);
-          else if(time > 164000 && time < 169000) // 2:44 
+          else if(time > 164000 && time < 169000) // 2:44
             switchCityLights(city,"random");
-          if(time > 164000 && time < 169000)
-            roomLightSwitch();
-          else if(time > 169500 && time < 170000)
-            roomLightSwitch("on");
           this.peakCount++;
         }
       }
@@ -820,48 +989,6 @@ class Building {
     this.building.position.set(x, y, z);
     toonize(this.building,0.005, false);
   }
-}
-
-
-// Clouds:
-function randomClouds()
-{
-  
-  const map = (val, smin, smax, emin, emax) => (emax-emin)*(val-smin)/(smax-smin) + emin
-  //randomly displace the x,y,z coords by the `per` value
-  const jitter = (geo,per1,per2) => geo.vertices.forEach(v => {
-      v.x += map(Math.random(),0,1,-per2,per2)
-      v.y += map(Math.random(),0,1,-per1,per1)
-      //v.z += map(Math.random(),0,1,-per,per)
-  })
-  
-  const material =  new THREE.MeshLambertMaterial({
-        color:'white',
-        flatShading:true,
-        transparent: true,
-        opacity: 0.3
-  });
-  var cloud = new THREE.Mesh(new THREE.CircleGeometry(100,7,8), material);
-  cloud.updateMatrix();
-  
-  var tuft1 = new THREE.Mesh(new THREE.SphereGeometry(100,7,8), material);
-  tuft1.position.x = -2000;
-  //tuft1.rotation.y = Math.PI/2;
-  tuft1.updateMatrix(); // as needed
-  cloud.geometry.merge(tuft1.geometry, tuft1.matrix);
-
-  var tuft2 = new THREE.Mesh(new THREE.SphereGeometry(100,7,8), material);
-  tuft2.position.x = 2000;
-  //tuft2.rotation.y = -Math.PI/2;
-  tuft2.updateMatrix(); // as needed
-  cloud.geometry.merge(tuft2.geometry, tuft2.matrix);
-  console.log(cloud.geometry);
-
-  jitter(cloud.geometry,20,1500)
-  cloud.position.z = -600;
-  cloud.position.y = 50;//+THREE.Math.randFloatSpread(30);
-  cloud.name="cloud!";
-  return cloud;
 }
 
 
