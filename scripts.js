@@ -1,7 +1,8 @@
 /* globals AFRAME, THREE */
 var debug = false;
 window.addEventListener('load', function() {
-  document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u=http://www.spacebarman.com";
+  document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u="+window.location;
+  document.querySelector("#tw-share").href="https://twitter.com/intent/tweet?text=Lockdown, a VR experience by @spacebarman: "+window.location;
   document.querySelector('#action').pause();
   if( !AFRAME.utils.device.isMobile() && !AFRAME.utils.device.isMobileVR() ) document.querySelector(".a-enter-vr").style.display='none';
   checkLoad();
@@ -223,7 +224,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
-    //this.camRotZ = document.querySelector("#cameraRig").object3D.rotation.z; // WHYYYYYYYY!!!!
+    document.querySelector("#cameraRig").object3D.rotation.z = 0;
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 49) {
         roomLightSwitch();
@@ -264,7 +265,6 @@ AFRAME.registerComponent("scene-update", {
       document.querySelector("#room-shrink").object3D.scale.y = this.shrinkY * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
-      //document.querySelector("#cameraRig").object3D.rotation.z = this.camRotZ * (1-time*1e-9); // WHYYYYYYYY!!!!
       document.querySelector("#cameraRig").object3D.rotation.z += 0.000012;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
@@ -328,10 +328,24 @@ AFRAME.registerComponent("scene-update", {
     }
     //else if(time > 189000 && time < 189100)
     //else if(time > 189100 && time < 189200)
-    else if(time>189200)
+    else if(time>189200 && time <= 195000)
     {
       roomLightSwitch("off");
-      streetLight.setAttribute("light",{intensity:0.1})
+      streetLight.setAttribute("light",{intensity:0.1});
+    }
+    else if(time > 195000)
+    {
+      roomLightSwitch("off");
+      // Restart experience:
+      if(document.querySelector('#veil').style.display == "none")
+      {
+        document.querySelector('#start').style.display="none";
+        document.querySelector('#restart').addEventListener('click', function (e) {
+          location.reload();
+        });
+        document.querySelector('#restart').style.display="flex";
+        document.querySelector('#veil').style.display="flex";
+      }
     }
   }
 });
@@ -475,13 +489,11 @@ AFRAME.registerComponent("sky", {
           if(Math.random() > 0.9)
           {
             this.cloudField.lightningsOn()
-            console.log("LIGHTNING on " + this.flashOn)
             this.flashOn = true;
           }
         }
         else
         {
-          console.log("--------- off " + this.flashOn);
           this.cloudField.lightningsOff()
           this.flashOn = false;
         }        
@@ -554,7 +566,7 @@ class CloudField{
                                 new THREE.MeshBasicMaterial({
                                   color:'white',
                                   transparent: true,
-                                  opacity: 0.3,
+                                  opacity: 0.3
                                 }));
     cloudF.position.z = -600;
     cloudF.position.y = 100;
@@ -567,7 +579,7 @@ class CloudField{
                                 new THREE.MeshBasicMaterial({
                                   color:'white',
                                   transparent: true,
-                                  opacity: 0.3,
+                                  opacity: 0.3
                                 }));
     cloudB.position.z = 600;
     cloudB.position.y = 100;
@@ -580,7 +592,7 @@ class CloudField{
                                 new THREE.MeshBasicMaterial({
                                   color:'white',
                                   transparent: true,
-                                  opacity: 0.3,
+                                  opacity: 0.3
                                 }));
     cloudL.rotation.y = Math.PI/2;
     cloudL.position.x = -600;
@@ -593,7 +605,7 @@ class CloudField{
                                 new THREE.MeshBasicMaterial({
                                   color:'white',
                                   transparent: true,
-                                  opacity: 0.3,
+                                  opacity: 0.3
                                 }));
     cloudR.rotation.y = -Math.PI/2;
     cloudR.position.x = 600;
