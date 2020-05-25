@@ -75,7 +75,9 @@ mainVolume.connect(ctx.destination);
 const worldFloor = -30;
 const T = 60000; // Time constant: 60000
 let shrinkingFactor = 0.9999915;
-var city;
+let shrinkingFactorDouble = shrinkingFactor;
+var city, starField, cloudField;
+var flashCounter = 0, clockDirection = 1;
 var BD = {};
 var SD = {};
 var HH = {}
@@ -208,6 +210,13 @@ AFRAME.registerComponent("scene-setup", {
     } 
     else city = notSoRandomCity("normal");
     this.el.object3D.add(city);
+    starField = new StarField();
+    cloudField = new CloudField();
+    starField.setOpacity(0);
+    this.el.object3D.add(starField.stars);
+    this.el.object3D.add(cloudField.clouds);
+    this.el.object3D.add(cloudField.lightnings);
+    this.el.object3D.add(cloudField.flash);
   }
 });
 
@@ -223,11 +232,37 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkX = document.querySelector("#room-shrink").object3D.scale.x;
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
+    this.tableX = 2.13;//1.95; //document.querySelector("#table-object").object3D.position.x;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     document.querySelector("#cameraRig").object3D.rotation.z = 0;
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 49) {
         roomLightSwitch();
+      }
+    });
+    document.addEventListener('keydown', function(event) {
+      if(event.keyCode == 67) {
+        switchCityLights(city,"random");
+      }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+      if(event.keyCode == 86) {
+        switchCityLights(city,"off");
+      }
+    });
+    
+    //cloudField.lightningsOn();
+    document.addEventListener('keydown', function(event) {
+      if(event.keyCode == 76) {
+        flashCounter = 2;
+        cloudField.lightningsOn();
+      }
+    });
+    
+    document.addEventListener('keydown', function(event) {
+      if(event.keyCode == 84) {
+        clockDirection *= -1;
       }
     });
     
@@ -258,13 +293,13 @@ AFRAME.registerComponent("scene-update", {
     // Stuff that happens during the song. The song is 3:12 long (last hit at 3:03)
     if(time < 183100 && startTime >=0 )
     {
-      //if(time > 178000)
-      //  this.T *= 1.00007;//+=6; // Slow down world
       shrinkingFactor = 1-time*17e-7;//1-time*7.8e-10;
+      shrinkingFactorDouble = 1-time*20e-7;
       document.querySelector("#room-shrink").object3D.scale.x = this.shrinkX * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.y = this.shrinkY * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
+      document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactorDouble;
       document.querySelector("#cameraRig").object3D.rotation.z += 0.000012;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
@@ -273,7 +308,7 @@ AFRAME.registerComponent("scene-update", {
       sun.object3D.position.z = R*orbitSin;
       sunlight2.object3D.position.y = orbitCos*12;
 
-      hours.object3D.rotation.x = (6*time/this.T)+Math.PI/4;
+      hours.object3D.rotation.x = clockDirection*((6*time/this.T)+Math.PI/4);
       minutes.object3D.rotation.x = hours.object3D.rotation.x*12;
 
       var sunFade = 1;
@@ -393,18 +428,10 @@ AFRAME.registerComponent("sky", {
     this.dawn = false;
   },
   init: function () {
-    this.starField = new StarField();
-    this.cloudField = new CloudField();
-    this.starField.setOpacity(0);
-    this.el.sceneEl.object3D.add(this.starField.stars);
-    this.el.sceneEl.object3D.add(this.cloudField.clouds);
-    this.el.sceneEl.object3D.add(this.cloudField.lightnings);
-    this.el.sceneEl.object3D.add(this.cloudField.flash);
     this.T = T;
     this.night = false;
     this.dusk = false;
     this.dawn = false;
-    this.flashOn = false;
   },
   tick: function(time, deltaTime) {
     if(startTime == 0)
@@ -431,12 +458,12 @@ AFRAME.registerComponent("sky", {
     if(orbitCos < duskTop)
     {
       // Starfield rotation
-      this.starField.stars.rotation.y=time/this.T;
-      this.starField.stars.rotation.z=-time/this.T;
+      starField.stars.rotation.y=time/this.T;
+      starField.stars.rotation.z=-time/this.T;
     }
     // Cloudfield movement
-    this.cloudField.clouds.rotation.y=-time/(this.T*0.35);
-    this.cloudField.lightnings.rotation.y=this.cloudField.clouds.rotation.y;
+    cloudField.clouds.rotation.y = -time/(this.T*0.35);
+    cloudField.lightnings.rotation.y = cloudField.clouds.rotation.y;
     
     if(time < 183100 && startTime >=0 )
     {     
@@ -445,7 +472,7 @@ AFRAME.registerComponent("sky", {
       
       if(orbitCos < duskTop && orbitCos > duskMid) // Transition to dusk
       {
-        this.starField.setOpacity(orbitCos.map(duskMid, duskTop, 0.5, 0));
+        starField.setOpacity(orbitCos.map(duskMid, duskTop, 0.5, 0));
         let topR = Math.round(orbitCos.map(duskMid, duskTop, topDuskR, topDayR));
         let topG = Math.round(orbitCos.map(duskMid, duskTop, topDuskG, topDayG));
         let topB = Math.round(orbitCos.map(duskMid, duskTop, topDuskB, topDayB));
@@ -457,8 +484,8 @@ AFRAME.registerComponent("sky", {
       }      
       else if(orbitCos < 0 && orbitCos > -0.1) // Transition to night
       {
-        this.starField.setOpacity(orbitCos.map(duskBottom, duskMid,1, 0.5));
-        this.cloudField.setOpacity(orbitCos.map(duskBottom, duskMid, 0.05, 0.3));
+        starField.setOpacity(orbitCos.map(duskBottom, duskMid,1, 0.5));
+        cloudField.setOpacity(orbitCos.map(duskBottom, duskMid, 0.05, 0.3));
         let topR = Math.round(orbitCos.map(duskBottom, duskMid, topNightR, topDuskR));
         let topG = Math.round(orbitCos.map(duskBottom, duskMid, topNightG, topDuskG));
         let topB = Math.round(orbitCos.map(duskBottom, duskMid, topNightB, topDuskB));
@@ -470,35 +497,41 @@ AFRAME.registerComponent("sky", {
       }      
       else if(orbitCos < -0.1) // Night
       {
-        this.starField.setOpacity(1);
-        //this.cloudField.setOpacity(0.1);
+        starField.setOpacity(1);
+        //cloudField.setOpacity(0.1);
         topRGB = "rgb(" + topNightR + "," + topNightG + "," + topNightB + ")";
         midRGB = "rgb(" + midNightR + "," + midNightG + "," + midNightB + ")";
       }
       else // Day
       {
-        this.starField.setOpacity(0);
-        //this.cloudField.setOpacity(0.3);
+        starField.setOpacity(0);
+        //cloudField.setOpacity(0.3);
       }
       sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });
-      
+      // Storm
       if(time > 154500 && time < 169000) // if(time > 154500 && time < 169000)
       {
-        if(!this.flashOn)
+        roomLightSwitch("off");
+        if(!cloudField.flashOn)
         {
           if(Math.random() > 0.9)
           {
-            this.cloudField.lightningsOn()
-            this.flashOn = true;
+            cloudField.lightningsOn();
           }
         }
         else
         {
-          this.cloudField.lightningsOff()
-          this.flashOn = false;
+          cloudField.lightningsOff()
         }        
       }
-      
+      else if(cloudField.flashOn)
+      {
+        if(flashCounter == 0)
+          cloudField.lightningsOff();
+        else
+          flashCounter--;
+        console.log("Turning it off!")
+      }
       
     }
     else
@@ -556,7 +589,7 @@ class CloudField{
 
     this.clouds = new THREE.Group();
     this.lightnings = new THREE.Group();
-     
+    this.flashOn = false;
     const cloudRadius = 40;
     const vertexes = 10;
     const jitterX = 20;
@@ -649,6 +682,7 @@ class CloudField{
     this.flash.intensity = 1;
   }
   lightningsOn() {
+    this.flashOn = true;
     for(var i=0;i<this.lightnings.children.length;i++)
     {
       this.lightnings.children[i].twitch();
@@ -664,6 +698,7 @@ class CloudField{
       this.lightnings.children[i].material.visible = false;
     }
     this.flash.intensity = 0;
+    this.flashOn = false;
   }
   twitch(flash){
     let geom = flash.geometry;
