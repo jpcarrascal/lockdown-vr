@@ -77,7 +77,7 @@ const T = 60000; // Time constant: 60000
 let shrinkingFactor = 0.9999915;
 let shrinkingFactorDouble = shrinkingFactor;
 var city, starField, cloudField;
-var flashCounter = 0, clockDirection = 1;
+var clockDirection = 1;
 var BD = {};
 var SD = {};
 var HH = {}
@@ -255,7 +255,7 @@ AFRAME.registerComponent("scene-update", {
     //cloudField.lightningsOn();
     document.addEventListener('keydown', function(event) {
       if(event.keyCode == 76) {
-        flashCounter = 2;
+        cloudField.flashCounter = 2;
         cloudField.lightningsOn();
       }
     });
@@ -371,6 +371,13 @@ AFRAME.registerComponent("scene-update", {
     else if(time > 195000)
     {
       roomLightSwitch("off");
+      if(cloudField.flashOn)
+      {
+        if(cloudField.flashCounter == 0)
+          cloudField.lightningsOff();
+        else
+          cloudField.flashCounter--;
+      };
       // Restart experience:
       if(document.querySelector('#veil').style.display == "none")
       {
@@ -526,11 +533,10 @@ AFRAME.registerComponent("sky", {
       }
       else if(cloudField.flashOn)
       {
-        if(flashCounter == 0)
+        if(cloudField.flashCounter == 0)
           cloudField.lightningsOff();
         else
-          flashCounter--;
-        console.log("Turning it off!")
+          cloudField.flashCounter--;
       }
       
     }
@@ -590,6 +596,7 @@ class CloudField{
     this.clouds = new THREE.Group();
     this.lightnings = new THREE.Group();
     this.flashOn = false;
+    this.flashCounter = 0;
     const cloudRadius = 40;
     const vertexes = 10;
     const jitterX = 20;
