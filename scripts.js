@@ -232,7 +232,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkX = document.querySelector("#room-shrink").object3D.scale.x;
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
-    this.tableX = 2.13;//1.95; //document.querySelector("#table-object").object3D.position.x;
+    this.tableX = 2.10;//1.95; //document.querySelector("#table-object").object3D.position.x;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     document.querySelector("#cameraRig").object3D.rotation.z = 0;
     document.addEventListener('keydown', function(event) {
@@ -1104,14 +1104,14 @@ AFRAME.registerComponent('toon', {
   schema: {
     thickness: {type: 'number', default: 0},
     changeMaterial: {type: 'boolean', default: false},
-    deep: {type: 'boolean', default: true}
+    depthWrite: {type: 'boolean', default: true}
   },
 
   init: function () {
     var data = this.data;
     var el = this.el;  // Entity.
     var scene = this.el.sceneEl;
-    toonize(el.object3D, data.thickness, data.changeMaterial);
+    toonize(el.object3D, data.thickness, data.changeMaterial, data.depthWrite);
   }
 });
 
@@ -1129,7 +1129,9 @@ AFRAME.registerComponent('toon-model', {
       var scene = this.el.sceneEl;
       toonize(el.object3D, data.thickness, data.changeMaterial);
     });
-  }
+  },
+  
+  
 });
 
 function distanceVector( v1, v2 )
@@ -1141,13 +1143,13 @@ function distanceVector( v1, v2 )
     return Math.sqrt( dx * dx + dy * dy + dz * dz );
 }
 
-function outlineMaterial()
+function outlineMaterial(depthWrite=true)
 {
     var material = new THREE.MeshBasicMaterial({
         color: 0x000000, 
-        side:THREE.BackSide
+        side:THREE.BackSide,
+        depthWrite: depthWrite
     })
-
     material.onBeforeCompile = (shader) => {
         const token = '#include <begin_vertex>'
         //const customTransform = `vec3 transformed = position + objectNormal*0.03;`
@@ -1157,7 +1159,7 @@ function outlineMaterial()
     return material;
 }
 
-function toonize(object, thickness=0, changeMaterial=true, deep=true)
+function toonize(object, thickness=0, changeMaterial=true, depthWrite=true, deep=true)
 {
     if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
       return;
@@ -1177,7 +1179,7 @@ function toonize(object, thickness=0, changeMaterial=true, deep=true)
           {
             var outline = node.clone();
             outline.scale.set(s,s,s);
-            outline.material = outlineMaterial();
+            outline.material = outlineMaterial(depthWrite);
             outline.name = "outline for "+node.name;
             outlines.add(outline);
           }
@@ -1196,7 +1198,7 @@ function toonize(object, thickness=0, changeMaterial=true, deep=true)
       {
         var outline = object.clone();
         outline.scale.set(s,s,s);
-        outline.material = outlineMaterial();
+        outline.material = outlineMaterial(depthWrite);
         outline.name = "outline for "+object.name;
         outlines.add(outline);
       }
