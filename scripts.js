@@ -521,30 +521,26 @@ AFRAME.registerComponent("sky", {
         roomLightSwitch("off");
         if(!cloudField.flashOn)
         {
-          if(Math.random() > 0.9)
+          if(Math.random() > 0.8)
           {
             cloudField.lightningsOn();
+            cloudField.flashCounter = 2;
           }
-        }
-        else
-        {
-          cloudField.lightningsOff()
-        }        
+        }       
       }
-      else if(cloudField.flashOn)
-      {
-        if(cloudField.flashCounter == 0)
-          cloudField.lightningsOff();
-        else
-          cloudField.flashCounter--;
-      }
-      
     }
     else
     {
         topRGB = "rgb(" + topNightR + "," + topNightG + "," + topNightB + ")";
         midRGB = "rgb(" + midNightR + "," + midNightG + "," + midNightB + ")";
         sky.setAttribute("material",{topColor: topRGB, middleColor: midRGB });      
+    }
+    if(cloudField.flashOn)
+    {
+      if(cloudField.flashCounter == 0)
+        cloudField.lightningsOff();
+      else
+        cloudField.flashCounter--;
     }
   }
 });
@@ -1159,52 +1155,30 @@ function outlineMaterial(depthWrite=true)
     return material;
 }
 
-function toonize(object, thickness=0, changeMaterial=true, depthWrite=true, deep=true)
+function toonize(object, thickness=0, changeMaterial=true, depthWrite=true)
 {
     if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
       return;
     const s = 1 + thickness;
-    var outlines = new THREE.Group();
-    if(deep)
-    {
-      object.traverse( function( node ) {
-        if( node.material && node.name.indexOf("win") < 0 ) {
-          if(changeMaterial)
-          {
-            let origColor = node.material.color;
-            node.material = new THREE.MeshToonMaterial({gradientMap: gradientMaps.threeTone});
-            node.material.color.set(origColor);//(0x2194ce);
-          }
-          if(thickness>0)
-          {
-            var outline = node.clone();
-            outline.scale.set(s,s,s);
-            outline.material = outlineMaterial(depthWrite);
-            outline.name = "outline for "+node.name;
-            outlines.add(outline);
-          }
+
+    object.traverse( function( node ) {
+      if( node.material && node.name.indexOf("win") < 0 ) {
+        if(changeMaterial)
+        {
+          let origColor = node.material.color;
+          node.material = new THREE.MeshToonMaterial({gradientMap: gradientMaps.threeTone});
+          node.material.color.set(origColor);//(0x2194ce);
         }
-      });
-    } 
-    else
-    {
-      if(changeMaterial)
-      {
-        let origColor = object.material.color;
-        object.material = new THREE.MeshToonMaterial({gradientMap: gradientMaps.threeTone});
-        object.material.color.set(origColor);//(0x2194ce);
+        if(thickness>0)
+        {
+          var outline = node.clone();
+          outline.scale.set(s,s,s);
+          outline.material = outlineMaterial(depthWrite);
+          outline.name = "outline for "+node.name;
+          object.add(outline);
+        }
       }
-      if(thickness>0)
-      {
-        var outline = object.clone();
-        outline.scale.set(s,s,s);
-        outline.material = outlineMaterial(depthWrite);
-        outline.name = "outline for "+object.name;
-        outlines.add(outline);
-      }
-    }
-    if(thickness>0)
-      object.add(outlines);
+    });
 }
 
 function wireframize(object, thickness=1, changeMaterial=true)
