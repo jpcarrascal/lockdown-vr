@@ -75,7 +75,7 @@ mainVolume.connect(ctx.destination);
 const worldFloor = -30;
 const T = 60000; // Time constant: 60000
 let shrinkingFactor = 0.9999915;
-let shrinkingFactorDouble = shrinkingFactor;
+let shrinkingFactor2 = shrinkingFactor;
 var city, starField, cloudField;
 var clockDirection = 1;
 var BD = {};
@@ -200,7 +200,7 @@ AFRAME.registerComponent('a-button-listener', {
 
 AFRAME.registerComponent("scene-setup", {
   init: function () {
-    //sceneEl.pause();
+    let scene = this.el.sceneEl.object3D;
     if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
     {
       this.el.setAttribute("shadow", false);
@@ -209,14 +209,14 @@ AFRAME.registerComponent("scene-setup", {
       city = notSoRandomCity("small");
     } 
     else city = notSoRandomCity("normal");
-    this.el.object3D.add(city);
+    scene.add(city);
     starField = new StarField();
     cloudField = new CloudField();
     starField.setOpacity(0);
-    this.el.object3D.add(starField.stars);
-    this.el.object3D.add(cloudField.clouds);
-    this.el.object3D.add(cloudField.lightnings);
-    this.el.object3D.add(cloudField.flash);
+    scene.add(starField.stars);
+    scene.add(cloudField.clouds);
+    scene.add(cloudField.lightnings);
+    scene.add(cloudField.flash);
   }
 });
 
@@ -233,6 +233,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.tableX = 2.10;//1.95; //document.querySelector("#table-object").object3D.position.x;
+    this.drumkitX = 0.88;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     document.querySelector("#cameraRig").object3D.rotation.z = 0;
     document.addEventListener('keydown', function(event) {
@@ -293,14 +294,15 @@ AFRAME.registerComponent("scene-update", {
     // Stuff that happens during the song. The song is 3:12 long (last hit at 3:03)
     if(time < 183100 && startTime >=0 )
     {
-      shrinkingFactor = 1-time*17e-7;//1-time*7.8e-10;
-      shrinkingFactorDouble = 1-time*20e-7;
+      shrinkingFactor = 1-time*19e-7; // 1-time*17e-7
+      shrinkingFactor2 = 1-time*22e-7;
       document.querySelector("#room-shrink").object3D.scale.x = this.shrinkX * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.y = this.shrinkY * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
-      document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactorDouble;
-      document.querySelector("#cameraRig").object3D.rotation.z += 0.000012;
+      document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactor2;
+      document.querySelector("#drumkit").object3D.position.x = this.drumkitX * shrinkingFactor2;
+      document.querySelector("#cameraRig").object3D.rotation.z += 0.0000125;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
       let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
@@ -1091,7 +1093,6 @@ AFRAME.registerComponent('wireframe', {
   init: function () {
     var data = this.data;
     var el = this.el;  // Entity.
-    var scene = this.el.sceneEl;
     wireframize(el.object3D);
   }
 });
@@ -1106,7 +1107,6 @@ AFRAME.registerComponent('toon', {
   init: function () {
     var data = this.data;
     var el = this.el;  // Entity.
-    var scene = this.el.sceneEl;
     toonize(el.object3D, data.thickness, data.changeMaterial, data.depthWrite);
   }
 });
@@ -1122,7 +1122,6 @@ AFRAME.registerComponent('toon-model', {
     this.el.addEventListener('model-loaded', () => {
       var data = this.data;
       var el = this.el;  // Entity.
-      var scene = this.el.sceneEl;
       toonize(el.object3D, data.thickness, data.changeMaterial);
     });
   },
@@ -1329,55 +1328,5 @@ var gradientMaps = ( function () {
 
 	}
   
-// Horrible function not working anyway:  
-function cloudsSVG(scene)
-{
-  var loader = new THREE.SVGLoader();
-  loader.load(
-	// resource URL
-	'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FCloud1.svg?v=1589379677158',
-	// called when the resource is loaded
-    function ( data ) {
-      var paths = data.paths;
-      var group = new THREE.Group();
-      var material = new THREE.MeshBasicMaterial( {
-        color: 0xff0000,
-        side: THREE.DoubleSide,
-        depthWrite: false
-      } );
-      for ( var i = 0; i < paths.length; i ++ ) {
-        var path = paths[ i ];
-        var shapes = path.toShapes( true );
-        for ( var j = 0; j < shapes.length; j ++ ) {
-          var shape = shapes[ j ];
-          var geometry = new THREE.ShapeBufferGeometry( shape );
-          var mesh = new THREE.Mesh( geometry, material );
-          group.add( mesh );
-        }
 
-      }
-      group.position.x = 0;
-      group.position.y = 0;
-      group.position.z = 0;
-      group.scale.set(100,100,100);
-      group.name = "Cloud1";
-      scene.add(group);
-      console.log(group);
-
-    },
-    // called when loading is in progresses
-    function ( xhr ) {
-
-      console.log("Cloud " + ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
-    },
-	// called when loading has errors
-    function ( error ) {
-
-      console.log( 'An error happened' );
-
-    }
-  );
-}
-  
   */
