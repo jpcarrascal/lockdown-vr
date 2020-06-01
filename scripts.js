@@ -75,7 +75,7 @@ mainVolume.connect(ctx.destination);
 const worldFloor = -30;
 const T = 60000; // Time constant: 60000
 let shrinkingFactor = 0.9999915;
-let shrinkingFactorDouble = shrinkingFactor;
+let shrinkingFactor2 = shrinkingFactor;
 var city, starField, cloudField;
 var clockDirection = 1;
 var BD = {};
@@ -233,6 +233,7 @@ AFRAME.registerComponent("scene-update", {
     this.shrinkY = document.querySelector("#room-shrink").object3D.scale.y;
     this.shrinkZ = document.querySelector("#room-shrink").object3D.scale.z;
     this.tableX = 2.10;//1.95; //document.querySelector("#table-object").object3D.position.x;
+    this.drumkitX = 0.88;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     document.querySelector("#cameraRig").object3D.rotation.z = 0;
     document.addEventListener('keydown', function(event) {
@@ -293,13 +294,14 @@ AFRAME.registerComponent("scene-update", {
     // Stuff that happens during the song. The song is 3:12 long (last hit at 3:03)
     if(time < 183100 && startTime >=0 )
     {
-      shrinkingFactor = 1-time*17e-7;//1-time*7.8e-10;
-      shrinkingFactorDouble = 1-time*20e-7;
+      shrinkingFactor = 1-time*19e-7; // 1-time*17e-7
+      shrinkingFactor2 = 1-time*22e-7;
       document.querySelector("#room-shrink").object3D.scale.x = this.shrinkX * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.y = this.shrinkY * shrinkingFactor;
       document.querySelector("#room-shrink").object3D.scale.z = this.shrinkZ * shrinkingFactor;
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
-      document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactorDouble;
+      document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactor2;
+      document.querySelector("#drumkit").object3D.position.x = this.drumkitX * shrinkingFactor2;
       document.querySelector("#cameraRig").object3D.rotation.z += 0.000012;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
