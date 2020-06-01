@@ -302,7 +302,7 @@ AFRAME.registerComponent("scene-update", {
       document.querySelector("#lamp-object").object3D.position.y = this.lampY * shrinkingFactor;
       document.querySelector("#table-object").object3D.position.x = this.tableX * shrinkingFactor2;
       document.querySelector("#drumkit").object3D.position.x = this.drumkitX * shrinkingFactor2;
-      document.querySelector("#cameraRig").object3D.rotation.z += 0.0000125;
+      document.querySelector("#cameraRig").object3D.rotation.z += 0.000015;
       
       let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
       let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
