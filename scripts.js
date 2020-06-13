@@ -184,7 +184,17 @@ AFRAME.registerComponent('x-button-listener', {
   init: function () {
     var el = this.el;
     el.addEventListener('xbuttondown', function (evt) {
-      roomLightSwitch();
+      switchCityLights(city,"random");
+    });
+  }
+});
+
+AFRAME.registerComponent('y-button-listener', {
+  init: function () {
+    var el = this.el;
+    el.addEventListener('ybuttondown', function (evt) {
+      cloudField.flashCounter = 2;
+      cloudField.lightningsOn();
     });
   }
 });
@@ -194,6 +204,15 @@ AFRAME.registerComponent('a-button-listener', {
     var el = this.el;
     el.addEventListener('abuttondown', function (evt) {
       roomLightSwitch();
+    });
+  }
+});
+
+AFRAME.registerComponent('b-button-listener', {
+  init: function () {
+    var el = this.el;
+    el.addEventListener('bbuttondown', function (evt) {
+        clockDirection *= -1;
     });
   }
 });
@@ -1156,8 +1175,8 @@ function outlineMaterial(depthWrite=true)
 
 function toonize(object, thickness=0, changeMaterial=true, depthWrite=true)
 {
-    if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
-      return;
+    //if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
+    //  return;
     const s = 1 + thickness;
 
     object.traverse( function( node ) {
