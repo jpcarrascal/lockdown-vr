@@ -9,7 +9,7 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@2.0.0
       env:
-        FTP_SERVER: www.spacebarman.com
+        FTP_SERVER: ftp.spacebarman.com
         FTP_USERNAME: ${{ secrets.SPCBRMN_FTP_USERNAME }}
         FTP_PASSWORD: ${{ secrets.SPCBRMN_FTP_PASSWD }}
         REMOTE_DIR: "public_html/spacebarman.com/ep/fomo/lockdown-vr"
