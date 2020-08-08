@@ -1,4 +1,6 @@
 on: push
+    pull_request:
+      types: [closed] 
 name: Publish to Spacebarman.com
 jobs:
   FTP-Deploy-Action:
