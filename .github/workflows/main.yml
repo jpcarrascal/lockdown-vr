@@ -1,6 +1,7 @@
 on: 
  pull_request:
   types: [closed] 
+name: Update production repo in Glitch.me
 jobs:
   repo-sync:
     if: github.event.pull_request.merged == true
