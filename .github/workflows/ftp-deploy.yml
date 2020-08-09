@@ -17,6 +17,6 @@ jobs:
         FTP_SERVER: ${{ secrets.SPCBRMN_FTP_HOST }}
         FTP_USERNAME: ${{ secrets.SPCBRMN_FTP_USERNAME }}
         FTP_PASSWORD: ${{ secrets.SPCBRMN_FTP_PASSWD }}
-#        REMOTE_DIR: "public_html/spacebarman.com/ep/fomo/lockdown-vr"
+        REMOTE_DIR: ${{ secrets.SPCBRMN_FTP_DIR }}
         ARGS: --delete
         # --delete arg will delete files on the server if you've deleted them in git
