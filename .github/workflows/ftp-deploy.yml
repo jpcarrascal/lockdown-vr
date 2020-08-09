@@ -13,9 +13,9 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
       with:
-        FTP_SERVER: ${{ secrets.SPCBRMN_FTP_HOST }}
-        FTP_USERNAME: ${{ secrets.SPCBRMN_FTP_USERNAME }}
-        FTP_PASSWORD: ${{ secrets.SPCBRMN_FTP_PASSWD }}
-        REMOTE_DIR: ${{ secrets.SPCBRMN_FTP_DIR }}
+        ftp-server: ${{ secrets.SPCBRMN_FTP_HOST }}
+        ftp-username: ${{ secrets.SPCBRMN_FTP_USERNAME }}
+        ftp-password: ${{ secrets.SPCBRMN_FTP_PASSWD }}
+        #REMOTE_DIR: ${{ secrets.SPCBRMN_FTP_DIR }}
         ARGS: --delete
         # --delete arg will delete files on the server if you've deleted them in git
