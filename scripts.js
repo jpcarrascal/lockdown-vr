@@ -1,10 +1,10 @@
 /* globals AFRAME, THREE */
 var debug = false;
 window.addEventListener('load', function() {
+  console.log("1.WINDOW LOADED")
   document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u="+window.location;
   document.querySelector("#tw-share").href="https://twitter.com/intent/tweet?text=Lockdown, a VR experience by @spacebarman: "+window.location;
-  document.querySelector('#action').pause();
-  if( !AFRAME.utils.device.isMobile() && !AFRAME.utils.device.isMobileVR() ) document.querySelector(".a-enter-vr").style.display='none';
+  //document.querySelector('#action').pause();
   checkLoad();
 });
 
@@ -15,17 +15,15 @@ document.querySelector('a-scene').addEventListener('enter-vr', function () {
 
 // Checks if video is loaded. Source: http://atomicrobotdesign.com/blog/web-development/check-when-an-html5-video-has-loaded/
 // could have used vid.addEventListener('loadeddata', function() {});
-// but sometimed the video loads early and no more 'loadeddata' events are not triggered anymore.
+// but sometimes the video loads early and no more 'loadeddata' events are not triggered anymore.
 function checkLoad() {
-  let vid = document.querySelector("#JPvid");
-  let start = document.querySelector('#start');
-  let veil = document.querySelector('#veil');
-  let mobile = ( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
-  if(!mobile) document.querySelector(".a-enter-vr").style.display='none';
-  //  document.querySelector("a-scene").setAttribute("vr-mode-ui",{enterVRButton: "#start"})
-  //class="a-enter-vr-button"
+  var vid = document.querySelector("#JPvid");
+  var start = document.querySelector('#myEnterVRButton');
+  var veil = document.querySelector('#veil');
+  console.log("vidstate: "+vid.readyState)
   if (vid.readyState === 4) {
-    document.querySelector("#start").innerText="Start!";
+    console.log("3.VIDEO READY")
+    start.innerText="Start!";
     start.addEventListener('click', function (e) {
       document.querySelector('#action').play();
       var playPromise = vid.play();
@@ -46,6 +44,7 @@ function checkLoad() {
       }
       });
     } else {
+        console.log("had to wait...")
         setTimeout(checkLoad, 100);
     }
 }
@@ -149,8 +148,8 @@ function roomLightSwitch(status="")
 {
   let sw = document.querySelector("#room-light");
   let lamp = document.querySelector("#lamp");
-  const onValue = 1;
-  const offValue = 0.1;
+  const onValue = 0.7;
+  const offValue = 0.05;
   const onColor = "#FFFFEE";
   const offColor = "#E0D0C0";
   const onShader = "flat";
@@ -220,7 +219,8 @@ AFRAME.registerComponent('b-button-listener', {
 AFRAME.registerComponent("scene-setup", {
   init: function () {
     let scene = this.el.sceneEl.object3D;
-    if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
+    const mobile = AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR();
+    if( mobile )
     {
       this.el.setAttribute("shadow", false);
       if( AFRAME.utils.device.isMobileVR() )
@@ -341,9 +341,9 @@ AFRAME.registerComponent("scene-update", {
       sunlight2.setAttribute("light", {intensity: 1*sunFade });      
 
       if(orbitCos > 0)
-        ambient.setAttribute("light", {intensity: sunFade-0.4 })
+        ambient.setAttribute("light", {intensity: (sunFade-0.4)*0.8 })
       else
-        ambient.setAttribute("light", {intensity: 0 });
+        ambient.setAttribute("light", {intensity: 0.05 });
       
       const duskTop = 0.5, duskMid = 0, duskBottom = -0.1; // Dusk/Dawn boundaries
       if(orbitCos < duskTop && orbitCos > duskBottom)
@@ -420,7 +420,7 @@ AFRAME.registerComponent("room-boundaries", {
     
   },
   tick: function() {
-    let head = document.querySelector('#head');
+    let head = document.querySelector('#rig');
     // Keep player inside the room:
     if(!debug)
     {
@@ -448,6 +448,7 @@ AFRAME.registerComponent("room-boundaries", {
     }
   }
 });
+
 
 AFRAME.registerComponent("sky", {
   pause: function() {
@@ -546,8 +547,9 @@ AFRAME.registerComponent("sky", {
           {
             cloudField.lightningsOn();
             cloudField.flashCounter = 2;
+            roomLightSwitch("off");
           }
-        }       
+        } else if(Math.random() > 0.5) roomLightSwitch("on");
       }
     }
     else

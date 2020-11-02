@@ -39,7 +39,7 @@ h1
   color: red;
 }
 
-#start, #restart {
+#start, #restart, #myEnterVRButton {
   display: flex;
   align-items: center;
   justify-content: center;

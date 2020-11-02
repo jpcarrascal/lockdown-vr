@@ -17,17 +17,24 @@
       type="image/png" 
       href="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ffavicon.ico?v=1588790683613" />
     <link rel="stylesheet" type="text/css" href="style.css" />
+    <!-- changed these to local versions:
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/SVGLoader.js"></script>
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://unpkg.com/@tlaukkan/aframe-three-color-gradient-shader@0.0.1/index.js"></script>
+    -->
+    <script src="aframe.min.js"></script>
+    <script src="aframe-extras.controls.min.js"></script>
+    <script src="SVGLoader.js"></script>
+    <script src="gradient-sky.js"></script>
   <!--
     <script src="https://rawgit.com/fernandojsg/aframe-teleport-controls/master/dist/aframe-teleport-controls.min.js"></script>
  -->
-    <script src="https://unpkg.com/@tlaukkan/aframe-three-color-gradient-shader@0.0.1/index.js"></script>
+    
     <script defer src="scripts.js"></script>
   </head>
   <body>
     
-      <a-scene id="scene" shadow audio-update scene-setup vr-mode-ui>
+      <a-scene id="scene" shadow audio-update scene-setup vr-mode-ui="enterVRButton: #myEnterVRButton;">
         <a-sky geometry="primitive: sphere; radius:5000"
           material="shader: threeColorGradientShader; topColor: rgb(0,0,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
         </a-sky>
@@ -139,10 +146,10 @@
 
           <a-entity id="lamp-object" position="0 3 -0.5">
             <a-sphere id="lamp" position="0 -0.32 0" radius="0.15" color="#E0D0C0" shadow="cast:false;receive:false" material="shader:standard;side:double" toon="thickness:0.03;">
-              <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.1; castShadow: true; decay:1; distance:40;"></a-entity>
+              <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.05; castShadow: true; decay:1; distance:40;"></a-entity>
               <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
             </a-sphere>
-            <a-cylinder mixin="wall" radius="0.005" height="0.375" position="0 -0.17 0"></a-cylinder>
+            <a-cylinder mixin="wall" radius="0.005" height="0.375" position="0 -0.17 0" color="#666"></a-cylinder>
             <a-cylinder mixin="wall" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
           </a-entity>
           
@@ -206,7 +213,7 @@
           <a-box position="0 -30 -5" material="color: #666; src:#grass-texture; roughness: 1; repeat: 2 2" width="30" height="0.2" depth="10"></a-box>
           <a-box position="0 -30 -5" material="color: #333; roughness: 1" width="31" height="0.05" depth="11"></a-box>
           
-          <a-sphere id="sun" position="0 1000 -1000" radius="30" color="#FFFF00" material="shader:flat; fog: false" geometry="">
+          <a-sphere id="sun" position="0 1414.21 0" radius="30" color="#FFFF00" material="shader:flat; fog: false" geometry="">
             <a-entity id="sunlight" light="type: point; color: #FED; intensity: 0.1; castShadow: true; decay:0; distance: 2000" position="0 0 0"></a-entity>
           </a-sphere>
 
@@ -224,24 +231,28 @@
           
         </a-entity>
 
-        <a-entity id="cameraRig" position="0 1.7 0" rotation="0 0 360"> <!-- 0 1.7 0 -->
-          <a-entity id="head" camera wasd-controls look-controls room-boundaries>
-          </a-entity>
-          <a-entity teleport-controls="cameraRig: #cameraRig; button: trigger;"
-            vive-controls="hand: left"
-            oculus-touch-controls="hand: left"
-            microsoft-motion-controls="hand: left"
-            daydream-controls="left" gearvr-controls="left"
-            x-button-listener
-            y-button-listener>
-          </a-entity>
-          <a-entity teleport-controls="cameraRig: #cameraRig; type: line; button: trigger;"
-            vive-controls="hand: right"
-            microsoft-motion-controls="hand: right"
-            oculus-touch-controls="hand: right"
-            daydream-controls="right" gearvr-controls="right"
-            a-button-listener
-            b-button-listener>
+        <a-entity id="rig" movement-controls>
+          <a-entity id="cameraRig" position="0 1.7 0" rotation="0 0 360"> <!-- 0 1.7 0 -->
+            <a-entity id="head" camera look-controls room-boundaries>
+            </a-entity>
+
+            <a-entity teleport-controls="cameraRig: #cameraRig; button: trigger;"
+              vive-controls="hand: left"
+              oculus-touch-controls="hand: left"
+              microsoft-motion-controls="hand: left"
+              daydream-controls="left" gearvr-controls="left"
+              x-button-listener
+              y-button-listener>
+            </a-entity>
+
+            <a-entity teleport-controls="cameraRig: #cameraRig; type: line; button: trigger;"
+              vive-controls="hand: right"
+              microsoft-motion-controls="hand: right"
+              oculus-touch-controls="hand: right"
+              daydream-controls="right" gearvr-controls="right"
+              a-button-listener
+              b-button-listener>
+            </a-entity>
           </a-entity>
         </a-entity>
 
@@ -264,7 +275,7 @@
     </div>
     
     <div class="instructions">
-      <div id="start" class="myEnterVRButton">Loading...</div>
+      <div id="myEnterVRButton">Loading...</div>
       <div id="restart" style="display:none">Restart</div>
     </div>
     
