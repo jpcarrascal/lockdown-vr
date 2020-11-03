@@ -4,14 +4,12 @@ window.addEventListener('load', function() {
   console.log("1.WINDOW LOADED")
   document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u="+window.location;
   document.querySelector("#tw-share").href="https://twitter.com/intent/tweet?text=Lockdown, a VR experience by @spacebarman: "+window.location;
-  //document.querySelector('#action').pause();
+  document.querySelector('#restart').addEventListener('click', function (e) {
+    location.reload();
+  });
   checkLoad();
 });
 
-// enter-vr and exit-vr:
-document.querySelector('a-scene').addEventListener('enter-vr', function () {
-   console.log("ENTERED VR");
-});
 
 // Checks if video is loaded. Source: http://atomicrobotdesign.com/blog/web-development/check-when-an-html5-video-has-loaded/
 // could have used vid.addEventListener('loadeddata', function() {});
@@ -22,24 +20,26 @@ function checkLoad() {
   var veil = document.querySelector('#veil');
   console.log("vidstate: "+vid.readyState)
   if (vid.readyState === 4) {
+    document.querySelector('#scene').pause();
     console.log("3.VIDEO READY")
     start.innerText="Start!";
     start.addEventListener('click', function (e) {
-      document.querySelector('#action').play();
+      //document.querySelector('#scene').play();
       var playPromise = vid.play();
       if (playPromise !== undefined) {
         playPromise.then(function() {
-          // Only start BD, SD and HH playback when video playback is started
-          startTime = 0;
-          //const audioStartTime = Math.abs(startTime)/1000;
-          const audioStartTime = vid.currentTime;
-          BD.source.start(ctx.currentTime, audioStartTime, 194);
-          SD.source.start(ctx.currentTime, audioStartTime, 194);
-          HH.source.start(ctx.currentTime, audioStartTime, 194);
-          //song.source.start(ctx.currentTime, audioStartTime, 194);
-          veil.style.display = 'none';
+          // Only start BD, SD, HH, and scene playback when video playback is started
+          if(start.innerText.localeCompare("Start!") === 0 ) {
+            startTime = 0;
+            document.querySelector('#scene').play();
+            const audioStartTime = vid.currentTime;
+            BD.source.start(ctx.currentTime, audioStartTime, 194);
+            SD.source.start(ctx.currentTime, audioStartTime, 194);
+            HH.source.start(ctx.currentTime, audioStartTime, 194);
+            start.innerText="Go back to VR!"; 
+          }
         }).catch(function(error) {
-          console.log("Error playing video!!!");
+          console.log("Error playing audio or video!!!");
         });
       }
       });
@@ -61,7 +61,6 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 }
 
 var startTime = -1;
-// var songLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLockdown-trim.mp3?v=1588790687348";
 var BDLocation =  "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKD.mp3?v=1588790685488";
 var SDLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSD.mp3?v=1588790686804";
 var HHLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHH.mp3?v=1588790683823";
@@ -80,14 +79,6 @@ var clockDirection = 1;
 var BD = {};
 var SD = {};
 var HH = {}
-/*
-var song = {};
-song.source = ctx.createBufferSource();
-song.volume = ctx.createGain();
-song.source.connect(song.volume);
-song.volume.connect(mainVolume);
-song.source.loop = false;
-*/
 
 BD.source = ctx.createBufferSource();
 BD.analyzer = ctx.createAnalyser();
@@ -116,14 +107,6 @@ async function setupSample(location) {
     const sample = await getFile(ctx, filePath);
     return sample;
 }
-
-/*
-setupSample(songLocation)
-    .then((sample) => {
-      song.buffer = sample;
-      song.source.buffer = song.buffer;
-});
-*/
 
 setupSample(BDLocation)
     .then((sample) => {
@@ -285,9 +268,21 @@ AFRAME.registerComponent("scene-update", {
         clockDirection *= -1;
       }
     });
+    // Audio stuff:
+    this.peak = false;
+    this.peakCount = -1;
+    
+    document.querySelector('a-scene').addEventListener('exit-vr', function () {
+      console.log("EXIT VR!");
+    });
+    document.querySelector('a-scene').addEventListener('enter-vr', function () {
+      console.log("ENTERED VR!");
+    });
+    
     
   },
   pause: function() {
+    console.log("Main loop paused")
     startTime = 0;
     this.night = false;
     this.dusk = false;
@@ -308,7 +303,7 @@ AFRAME.registerComponent("scene-update", {
     let streetLight = document.querySelector('#street-light');
     let hours = document.querySelector('#hours');
     let minutes = document.querySelector('#minutes');
-    let lightSequencer = document.querySelector("#action");
+    let lightSequencer = document.querySelector("#scene");
 
     // Stuff that happens during the song. The song is 3:12 long (last hit at 3:03)
     if(time < 183100 && startTime >=0 )
@@ -400,72 +395,14 @@ AFRAME.registerComponent("scene-update", {
           cloudField.flashCounter--;
       };
       // Restart experience:
-      if(document.querySelector('#veil').style.display == "none")
-      {
-        document.querySelector('#start').style.display="none";
-        document.querySelector('#restart').addEventListener('click', function (e) {
-          location.reload();
-        });
-        document.querySelector('#restart').style.display="flex";
-        document.querySelector('#veil').style.display="flex";
-      }
+      document.querySelector('#start').style.display="none";
+      document.querySelector('#restart').style.display="flex";
     }
-  }
-});
-
-
-
-AFRAME.registerComponent("room-boundaries", {
-  pause: function() {
+    /*----- Sky update -----*/
     
-  },
-  tick: function() {
-    let head = document.querySelector('#rig');
-    // Keep player inside the room:
-    if(!debug)
-    {
-      let headX = head.object3D.position.x;
-      let headZ = head.object3D.position.z;
-      let boundary = 2.5 * shrinkingFactor * 0.9;
-      if(headX > boundary){
-          head.object3D.position.x = boundary;
-      }
-      if(headX < -boundary){
-          head.object3D.position.x = -boundary;
-      }
-      if(headZ > boundary){
-          head.object3D.position.z = boundary;
-      }
-      if(headZ < -boundary){
-          head.object3D.position.z = -boundary;
-      }
-// This takes the camera to the other side of the room:
-/*    if( Math.abs(headX) > 2.5 * shrinkingFactor)
-        head.object3D.position.x = -(headX*0.9) * shrinkingFactor;
-      if( Math.abs(headZ) > 2.5 * shrinkingFactor)
-        head.object3D.position.z = -(headZ*0.9) * shrinkingFactor;
-*/
-    }
-  }
-});
-
-
-AFRAME.registerComponent("sky", {
-  pause: function() {
-    this.night = false;
-    this.dusk = false;
-    this.dawn = false;
-  },
-  init: function () {
-    this.T = T;
-    this.night = false;
-    this.dusk = false;
-    this.dawn = false;
-  },
-  tick: function(time, deltaTime) {
-    if(startTime == 0)
+    /*if(startTime == 0)
       startTime = time;
-    time -= startTime;
+    time -= startTime;*/
     let orbitCos = -Math.cos(Math.PI-Math.PI*time/this.T);
     let orbitSin = -Math.sin(Math.PI-Math.PI*time/this.T);
     /*
@@ -565,6 +502,70 @@ AFRAME.registerComponent("sky", {
       else
         cloudField.flashCounter--;
     }
+    /*----- Sky update end -----*/
+    /*----- Audio update starts -----*/
+        if(time < 183100 && startTime >=0 )
+    {
+      let pos = this.el.object3D.position;
+      let snareDrum = document.querySelector('#snare-drum');
+      var bassDrum = document.querySelector('#bass-drum');
+      var hhTop = document.querySelector('#hh-top');
+      let BDAnalysis = analyze(BD.analyzer);
+      let SDAnalysis = analyze(SD.analyzer);
+      let HHAnalysis = analyze(HH.analyzer);
+      if(HHAnalysis > -38)
+      {
+        if(this.peak == false)
+        {
+          this.peak = true;
+          if(time > 154500 && time < 168500) // 2:34:500  2:48.500
+            switchCityLights(city,"seq",this.peakCount);
+          else if(time > 164000 && time < 169000) // 2:44
+            switchCityLights(city,"random");
+          this.peakCount++;
+        }
+      }
+      else
+        this.peak = false;
+      
+      if(time > 91200 && time < 103750 )
+      {
+        SDAnalysis = -999999;
+        HHAnalysis = -999999;
+        if( (time > 91200 && time < 92400) || (time > 92800 && time < 94000) || (time > 94500 && time < 95600) || (time > 96100 && time < 97200) )
+          BDAnalysis = -999999;
+        if( (time > 97700 && time < 98900) || (time > 99300 && time < 100500) || (time > 101000 && time < 102100) || (time > 102600 && time < 103700) )
+          BDAnalysis = -999999;
+      }
+      bassDrum.object3D.scale.y=1-(2/BDAnalysis);
+      snareDrum.object3D.scale.y=1+(3/SDAnalysis);
+      hhTop.object3D.position.y=0.007+(1/HHAnalysis);
+    }
+    
+    /*---- Audio update ends ----*/
+    /*---- Room boundaries start ----*/
+    let head = document.querySelector('#rig');
+    // Keep player inside the room:
+    if(!debug)
+    {
+      let headX = head.object3D.position.x;
+      let headZ = head.object3D.position.z;
+      let boundary = 2.5 * shrinkingFactor * 0.9;
+      if(headX > boundary){
+          head.object3D.position.x = boundary;
+      }
+      if(headX < -boundary){
+          head.object3D.position.x = -boundary;
+      }
+      if(headZ > boundary){
+          head.object3D.position.z = boundary;
+      }
+      if(headZ < -boundary){
+          head.object3D.position.z = -boundary;
+      }
+    }
+      /*---- Room boundaries ends ----*/
+    
   }
 });
 
@@ -770,59 +771,6 @@ class Lightning extends THREE.Line{
     geom.verticesNeedUpdate = true;
   }
 }
-
-AFRAME.registerComponent("audio-update", {
-  pause: function() {
-    
-  },
-  init: function()
-  {
-    this.peak = false;
-    this.peakCount = -1;
-  },
-  tick: function(time, deltaTime) {
-    if(startTime == 0)
-      startTime = time;
-    time -= startTime;
-    if(time < 183100 && startTime >=0 )
-    {
-      let pos = this.el.object3D.position;
-      let snareDrum = document.querySelector('#snare-drum');
-      var bassDrum = document.querySelector('#bass-drum');
-      var hhTop = document.querySelector('#hh-top');
-      let BDAnalysis = analyze(BD.analyzer);
-      let SDAnalysis = analyze(SD.analyzer);
-      let HHAnalysis = analyze(HH.analyzer);
-      if(HHAnalysis > -38)
-      {
-        if(this.peak == false)
-        {
-          this.peak = true;
-          if(time > 154500 && time < 168500) // 2:34:500  2:48.500
-            switchCityLights(city,"seq",this.peakCount);
-          else if(time > 164000 && time < 169000) // 2:44
-            switchCityLights(city,"random");
-          this.peakCount++;
-        }
-      }
-      else
-        this.peak = false;
-      
-      if(time > 91200 && time < 103750 )
-      {
-        SDAnalysis = -999999;
-        HHAnalysis = -999999;
-        if( (time > 91200 && time < 92400) || (time > 92800 && time < 94000) || (time > 94500 && time < 95600) || (time > 96100 && time < 97200) )
-          BDAnalysis = -999999;
-        if( (time > 97700 && time < 98900) || (time > 99300 && time < 100500) || (time > 101000 && time < 102100) || (time > 102600 && time < 103700) )
-          BDAnalysis = -999999;
-      }
-      bassDrum.object3D.scale.y=1-(2/BDAnalysis);
-      snareDrum.object3D.scale.y=1+(3/SDAnalysis);
-      hhTop.object3D.position.y=0.007+(1/HHAnalysis);
-    }
-  }
-});
 
 
 AFRAME.registerComponent("light-sequencer", {
@@ -1177,6 +1125,7 @@ function outlineMaterial(depthWrite=true)
 
 function toonize(object, thickness=0, changeMaterial=true, depthWrite=true)
 {
+    return;
     //if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
     //  return;
     const s = 1 + thickness;
@@ -1249,105 +1198,3 @@ var gradientMaps = ( function () {
 
 } )();
 
-
-/////////////// From Three.js effects examples
-/////////////// https://threejs.org/examples/#webgl_materials_variations_toon
-/*
-	var uniformsOutline = {
-		outlineThickness: { value: THREE.defaultThickness },
-		outlineColor: { value: new THREE.Color( 0x000000 ) },
-		outlineAlpha: { value: THREE.defaultAlpha }
-	};
-
-	var vertexShader = [
-		"#include <common>",
-		"#include <uv_pars_vertex>",
-		"#include <displacementmap_pars_vertex>",
-		"#include <fog_pars_vertex>",
-		"#include <morphtarget_pars_vertex>",
-		"#include <skinning_pars_vertex>",
-		"#include <logdepthbuf_pars_vertex>",
-		"#include <clipping_planes_pars_vertex>",
-
-		"uniform float outlineThickness;",
-
-		"vec4 calculateOutline( vec4 pos, vec3 normal, vec4 skinned ) {",
-		"	float thickness = outlineThickness;",
-		"	const float ratio = 1.0;", // TODO: support outline thickness ratio for each vertex
-		"	vec4 pos2 = projectionMatrix * modelViewMatrix * vec4( skinned.xyz + normal, 1.0 );",
-		// NOTE: subtract pos2 from pos because BackSide objectNormal is negative
-		"	vec4 norm = normalize( pos - pos2 );",
-		"	return pos + norm * thickness * pos.w * ratio;",
-		"}",
-
-		"void main() {",
-
-		"	#include <uv_vertex>",
-
-		"	#include <beginnormal_vertex>",
-		"	#include <morphnormal_vertex>",
-		"	#include <skinbase_vertex>",
-		"	#include <skinnormal_vertex>",
-
-		"	#include <begin_vertex>",
-		"	#include <morphtarget_vertex>",
-		"	#include <skinning_vertex>",
-		"	#include <displacementmap_vertex>",
-		"	#include <project_vertex>",
-
-		"	vec3 outlineNormal = - objectNormal;", // the outline material is always rendered with BackSide
-
-		"	gl_Position = calculateOutline( gl_Position, outlineNormal, vec4( transformed, 1.0 ) );",
-
-		"	#include <logdepthbuf_vertex>",
-		"	#include <clipping_planes_vertex>",
-		"	#include <fog_vertex>",
-
-		"}",
-
-	].join( "\n" );
-
-	var fragmentShader = [
-
-		"#include <common>",
-		"#include <fog_pars_fragment>",
-		"#include <logdepthbuf_pars_fragment>",
-		"#include <clipping_planes_pars_fragment>",
-
-		"uniform vec3 outlineColor;",
-		"uniform float outlineAlpha;",
-
-		"void main() {",
-
-		"	#include <clipping_planes_fragment>",
-		"	#include <logdepthbuf_fragment>",
-
-		"	gl_FragColor = vec4( outlineColor, outlineAlpha );",
-
-		"	#include <tonemapping_fragment>",
-		"	#include <encodings_fragment>",
-		"	#include <fog_fragment>",
-		"	#include <premultiplied_alpha_fragment>",
-
-		"}"
-
-	].join( "\n" );
-
-	function createMaterial() {
-
-		return new THREE.ShaderMaterial( {
-			type: 'OutlineEffect',
-			uniforms: THREE.UniformsUtils.merge( [
-				THREE.UniformsLib[ 'fog' ],
-				THREE.UniformsLib[ 'displacementmap' ],
-				uniformsOutline
-			] ),
-			vertexShader: vertexShader,
-			fragmentShader: fragmentShader,
-			side: THREE.BackSide
-		} );
-
-	}
-  
-
-  */
