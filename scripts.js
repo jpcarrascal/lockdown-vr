@@ -558,7 +558,7 @@ AFRAME.registerComponent("scene-update", {
     {
       let headX = head.object3D.position.x;
       let headZ = head.object3D.position.z;
-      let boundary = 2.5 * shrinkingFactor * 0.9;
+      let boundary = 2.5 * shrinkingFactor * 0.8;
       if(headX > boundary){
           head.object3D.position.x = boundary;
       }
