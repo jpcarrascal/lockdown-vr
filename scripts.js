@@ -18,13 +18,44 @@ window.addEventListener('load', function() {
       // Restart experience:
       if(mobile) {
         location.reload();
-        //document.querySelector('#myEnterVRButton').style.display="none";
-        //document.querySelector('#restart').style.display="flex";
       }
     });
   document.querySelector('a-scene').addEventListener('enter-vr', function () {
       console.log("ENTERED VR!");
   });
+  
+  // Keyboard controls:
+  document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 49) {
+      roomLightSwitch();
+    }
+  });
+  
+  document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 67) {
+      switchCityLights(city,"random");
+    }
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 86) {
+      switchCityLights(city,"off");
+    }
+  });
+  
+  document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 76) {
+      cloudField.flashCounter = 2;
+      cloudField.lightningsOn();
+    }
+  });
+  
+  document.addEventListener('keydown', function(event) {
+    if(event.keyCode == 84) {
+      clockDirection *= -1;
+    }
+  });
+  
   checkLoad();
 });
 
@@ -38,7 +69,7 @@ function checkLoad() {
   var veil = document.querySelector('#veil');
   console.log("vidstate: "+vid.readyState)
   if (vid.readyState === 4) {
-    document.querySelector('#scene').pause();
+    if(!debug) document.querySelector('#scene').pause();
     console.log("3.VIDEO READY")
     start.innerText="Start!";
     start.addEventListener('click', function (e) {
@@ -255,36 +286,6 @@ AFRAME.registerComponent("scene-update", {
     this.drumkitX = 0.88;
     this.lampY = 3;//document.querySelector("#lamp-object").object3D.position.y; // WHYYYYYYYY!!!!
     document.querySelector("#cameraRig").object3D.rotation.z = 0;
-    document.addEventListener('keydown', function(event) {
-      if(event.keyCode == 49) {
-        roomLightSwitch();
-      }
-    });
-    document.addEventListener('keydown', function(event) {
-      if(event.keyCode == 67) {
-        switchCityLights(city,"random");
-      }
-    });
-    
-    document.addEventListener('keydown', function(event) {
-      if(event.keyCode == 86) {
-        switchCityLights(city,"off");
-      }
-    });
-    
-    //cloudField.lightningsOn();
-    document.addEventListener('keydown', function(event) {
-      if(event.keyCode == 76) {
-        cloudField.flashCounter = 2;
-        cloudField.lightningsOn();
-      }
-    });
-    
-    document.addEventListener('keydown', function(event) {
-      if(event.keyCode == 84) {
-        clockDirection *= -1;
-      }
-    });
     // Audio stuff:
     this.peak = false;
     this.peakCount = -1;
@@ -334,7 +335,7 @@ AFRAME.registerComponent("scene-update", {
       sun.object3D.position.z = R*orbitSin;
       sunlight2.object3D.position.y = orbitCos*12;
 
-      hours.object3D.rotation.x = clockDirection*((6*time/this.T)+Math.PI/4);
+      hours.object3D.rotation.x += clockDirection*timeDelta/(this.T/6);//= clockDirection*((6*time/this.T)+Math.PI/4);
       minutes.object3D.rotation.x = hours.object3D.rotation.x*12;
 
       var sunFade = 1;
@@ -431,11 +432,11 @@ AFRAME.registerComponent("scene-update", {
     if(orbitCos < duskTop)
     {
       // Starfield rotation
-      starField.stars.rotation.y=time/this.T;
-      starField.stars.rotation.z=-time/this.T;
+      starField.stars.rotation.y += clockDirection*timeDelta/(this.T) //= time/this.T;
+      starField.stars.rotation.z -= clockDirection*timeDelta/(this.T)//= -time/this.T;
     }
-    // Cloudfield movement
-    cloudField.clouds.rotation.y = -time/(this.T*0.35);
+    // Clouds movement
+    cloudField.clouds.rotation.y += -clockDirection*3*timeDelta/(this.T); //= -time/(this.T*0.35);
     cloudField.lightnings.rotation.y = cloudField.clouds.rotation.y;
     
     if(time < 183100 && startTime >=0 )

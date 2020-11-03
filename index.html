@@ -96,6 +96,9 @@
               <a-box mixin="wall" position="-3 1.5 0" width="3" height="8" depth="0.08"></a-box>
               <a-box mixin="wall" position="3 1.5 0"  width="3" height="8" depth="0.08"></a-box>
               <a-box mixin="wood-color" position="0 0.05 0" width="5" height="0.1" depth="0.09"></a-box>
+              
+              <a-box mixin="black-wall" position="-4 1.5 .08" width="3" height="8" depth="0.08"></a-box>
+              <a-box mixin="black-wall" position="4 1.5 .08"  width="3" height="8" depth="0.08"></a-box>
 
               <a-entity id="window">
                   <a-box position="0 2.75 0" width="3" height="0.05" depth="0.1" mixin="wood-color" ></a-box>
@@ -148,8 +151,8 @@
               <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.05; castShadow: true; decay:1; distance:40;"></a-entity>
               <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
             </a-sphere>
-            <a-cylinder mixin="wall" radius="0.005" height="0.375" position="0 -0.17 0" color="#666"></a-cylinder>
-            <a-cylinder mixin="wall" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
+            <a-cylinder mixin="wall" color="#AAA" radius="0.005" height="0.375" position="0 -0.17 0"></a-cylinder>
+            <a-cylinder mixin="wall" color="#AAA" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
           </a-entity>
           
           <a-entity id="drumkit" position="0.88 0 0.4" scale="1.3 1.3 1.3">
