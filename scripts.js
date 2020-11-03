@@ -7,6 +7,24 @@ window.addEventListener('load', function() {
   document.querySelector('#restart').addEventListener('click', function (e) {
     location.reload();
   });
+  document.querySelector("#JPvid").addEventListener('ended', function() {
+    console.log("X.VIDEO ENDED")
+    document.querySelector('#myEnterVRButton').style.display="none";
+    document.querySelector('#restart').style.display="flex";
+  });
+  document.querySelector('a-scene').addEventListener('exit-vr', function () {
+      console.log("EXIT VR!");
+      const mobile = ( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
+      // Restart experience:
+      if(mobile) {
+        location.reload();
+        //document.querySelector('#myEnterVRButton').style.display="none";
+        //document.querySelector('#restart').style.display="flex";
+      }
+    });
+  document.querySelector('a-scene').addEventListener('enter-vr', function () {
+      console.log("ENTERED VR!");
+  });
   checkLoad();
 });
 
@@ -24,35 +42,34 @@ function checkLoad() {
     console.log("3.VIDEO READY")
     start.innerText="Start!";
     start.addEventListener('click', function (e) {
-      //document.querySelector('#scene').play();
-      var playPromise = vid.play();
-      if (playPromise !== undefined) {
-        playPromise.then(function() {
-          // Only start BD, SD, HH, and scene playback when video playback is started
-          if(start.innerText.localeCompare("Start!") === 0 ) {
-            startTime = 0;
-            document.querySelector('#scene').play();
-            const audioStartTime = vid.currentTime;
-            BD.source.start(ctx.currentTime, audioStartTime, 194);
-            SD.source.start(ctx.currentTime, audioStartTime, 194);
-            HH.source.start(ctx.currentTime, audioStartTime, 194);
-            start.innerText="Go back to VR!"; 
-          }
-        }).catch(function(error) {
-          console.log("Error playing audio or video!!!");
-        });
+      if(start.innerText.localeCompare("Start!") === 0 ) {
+        var playPromise = vid.play();
+        if (playPromise !== undefined) {
+          playPromise.then(function() {
+            // Only start BD, SD, HH, and scene playback when video playback is started
+              startTime = 0;
+              document.querySelector('#scene').play();
+              const audioStartTime = vid.currentTime;
+              BD.source.start(ctx.currentTime, audioStartTime, 194);
+              SD.source.start(ctx.currentTime, audioStartTime, 194);
+              HH.source.start(ctx.currentTime, audioStartTime, 194);
+              start.innerText="Go back to VR!"; 
+          }).catch(function(error) {
+            console.log("Error playing audio or video!!!");
+          });
+        }
       }
-      });
-    } else {
-        console.log("had to wait...")
-        setTimeout(checkLoad, 100);
-    }
+    });
+  } else {
+      console.log("had to wait...")
+      setTimeout(checkLoad, 100);
+  }
 }
 
 
 function debugThis(text)
 {
-  document.querySelector('#start').innerText = text;
+  document.querySelector('#myEnterVRButton').innerText = text;
 }
 
 // https://gist.github.com/xposedbones/75ebaef3c10060a3ee3b246166caab56
@@ -272,17 +289,10 @@ AFRAME.registerComponent("scene-update", {
     this.peak = false;
     this.peakCount = -1;
     
-    document.querySelector('a-scene').addEventListener('exit-vr', function () {
-      console.log("EXIT VR!");
-    });
-    document.querySelector('a-scene').addEventListener('enter-vr', function () {
-      console.log("ENTERED VR!");
-    });
-    
     
   },
   pause: function() {
-    console.log("Main loop paused")
+    console.log("2.MAIN LOOP PAUSED")
     startTime = 0;
     this.night = false;
     this.dusk = false;
@@ -394,9 +404,6 @@ AFRAME.registerComponent("scene-update", {
         else
           cloudField.flashCounter--;
       };
-      // Restart experience:
-      document.querySelector('#start').style.display="none";
-      document.querySelector('#restart').style.display="flex";
     }
     /*----- Sky update -----*/
     
