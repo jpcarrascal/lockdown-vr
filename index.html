@@ -16,6 +16,7 @@
     <link rel="icon" 
       type="image/png" 
       href="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ffavicon.ico?v=1588790683613" />
+    <link rel="stylesheet" href="https://use.typekit.net/oov2wcw.css">
     <link rel="stylesheet" type="text/css" href="style.css" />
     <!-- changed these to local versions:
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
@@ -33,256 +34,281 @@
     <script defer src="scripts.js"></script>
   </head>
   <body>
-    
-      <a-scene id="scene" shadow audio-update scene-update scene-setup light-sequencer vr-mode-ui="enterVRButton: #myEnterVRButton;">
-        <a-sky geometry="primitive: sphere; radius:5000"
-          material="shader: threeColorGradientShader; topColor: rgb(0,0,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
-        </a-sky>
-        <a-assets>
-          <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
-          <a-mixin id="table" material="color: #DDD; roughness: 1;" shadow="receive:false; cast:true"></a-mixin>
-          <a-mixin id="black-wall" material="color: #000; roughness:1;" shadow="receive:false; cast:false"></a-mixin>
-          <a-mixin id="wood-color" material="color: #492900;" shadow="receive:true; cast:false"></a-mixin>
-          <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSnare-tripod.glb?v=1588790687489"></a-asset-item>
-          <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHihat-tripod.glb?v=1588790685367"></a-asset-item>
-          <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKick-pedal.glb?v=1588790686001"></a-asset-item>
-          <a-asset-item id="kdrum-leg-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKdrum-leg.glb?v=1588790685734"></a-asset-item>
-          <img crossorigin="anonymous" id="parquet" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparquet00b.png?v=1588790688089" />
-          <img crossorigin="anonymous" id="tile" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftile-texture.jpg?v=1588790683382" />
-          <img crossorigin="anonymous" id="grass-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fgrass.jpg?v=1588790684785" />
-          <img crossorigin="anonymous" id="street-block" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fblock.png?v=1588790688359" />
-          <img crossorigin="anonymous" id="left-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLeft-wall.png?v=1596820190090" />
-          <img crossorigin="anonymous" id="right-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FRight-wall.png?v=1588790684406" />
-          <img crossorigin="anonymous" id="back-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBack-wall.jpg?v=1588790688055" />
-          <img crossorigin="anonymous" id="clock-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fclock.png?v=1588790683549" />
-          <img crossorigin="anonymous" id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
-          <img crossorigin="anonymous" id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
-          <img crossorigin="anonymous" id="table-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftable.png?v=1591005267227" />
-          <video crossorigin="anonymous" id="JPvid" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
-        </a-assets>
-        
-        <!-- room -->
-        <a-entity id="room-shrink" position="0 0 0">
-          <a-entity id="room" position="0 0 0">
+    <!--- A-SCENE STARTS --->
+    <a-scene id="scene" shadow audio-update scene-update scene-setup light-sequencer vr-mode-ui="enterVRButton: #myEnterVRButton;">
+      <a-sky geometry="primitive: sphere; radius:5000"
+        material="shader: threeColorGradientShader; topColor: rgb(0,0,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
+      </a-sky>
+      <a-assets>
+        <a-mixin id="wall" material="color: #DDD;" shadow="receive:true; cast:true"></a-mixin>
+        <a-mixin id="table" material="color: #DDD; roughness: 1;" shadow="receive:false; cast:true"></a-mixin>
+        <a-mixin id="black-wall" material="color: #000; roughness:1;" shadow="receive:false; cast:false"></a-mixin>
+        <a-mixin id="wood-color" material="color: #492900;" shadow="receive:true; cast:false"></a-mixin>
+        <a-asset-item id="snare-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSnare-tripod.glb?v=1588790687489"></a-asset-item>
+        <a-asset-item id="hh-tripod-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHihat-tripod.glb?v=1588790685367"></a-asset-item>
+        <a-asset-item id="kdrum-pedal-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKick-pedal.glb?v=1588790686001"></a-asset-item>
+        <a-asset-item id="kdrum-leg-model" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKdrum-leg.glb?v=1588790685734"></a-asset-item>
+        <img crossorigin="anonymous" id="parquet" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparquet00b.png?v=1588790688089" />
+        <img crossorigin="anonymous" id="tile" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftile-texture.jpg?v=1588790683382" />
+        <img crossorigin="anonymous" id="grass-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fgrass.jpg?v=1588790684785" />
+        <img crossorigin="anonymous" id="street-block" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fblock.png?v=1588790688359" />
+        <img crossorigin="anonymous" id="left-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FLeft-wall.png?v=1596820190090" />
+        <img crossorigin="anonymous" id="right-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FRight-wall.png?v=1588790684406" />
+        <img crossorigin="anonymous" id="back-wall-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBack-wall.jpg?v=1588790688055" />
+        <img crossorigin="anonymous" id="clock-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fclock.png?v=1588790683549" />
+        <img crossorigin="anonymous" id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
+        <img crossorigin="anonymous" id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
+        <img crossorigin="anonymous" id="table-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftable.png?v=1591005267227" />
+        <video crossorigin="anonymous" id="JPvid" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
+      </a-assets>
 
-            <a-entity id="left-wall" position="-2.5 1.5 0" >
-              <a-box mixin="wall" width="0.15" height="3" depth="5" src="#left-wall-texture"></a-box>
-              <a-box mixin="black-wall" position="-2 0 2.5" width="0.15" height="9" depth="10"></a-box>
-              
-              <a-box mixin="wood-color" position="0 -1.45 0" width="0.16" height="0.1" depth="5"></a-box>    
-            </a-entity>
-            
-            <a-entity id="right-wall" position="2.5 1.5 0">
-              <a-box mixin="wall" width="0.15" height="3" depth="5" src="#right-wall-texture"></a-box>
-              <a-box mixin="black-wall" position="2 0 2.5" width="0.15" height="9" depth="10" material="roughness: 1;"></a-box>
+      <!-- room -->
+      <a-entity id="room-shrink" position="0 0 0">
+        <a-entity id="room" position="0 0 0">
 
-              <a-box mixin="wood-color" position="0 -1.45 0" width="0.16" height="0.1" depth="5"></a-box>
-              <!--- clock: --->
-                <a-entity id="clock" position="-0.10 0.512 -1.52">
-                  <a-cylinder material="color: #FFF" rotation="0 0 90" radius="0.25" height="0.02"  toon="thickness:0.03" src="#clock-texture"></a-cylinder>
-                  <a-entity id="hours" position="-0.01 0 0">
-                    <a-cylinder material="color: #000" radius="0.005" height="0.10" position="0 0.05 0"></a-cylinder>
-                  </a-entity>
-                  <a-entity id="minutes" position="-0.01 0 0">
-                    <a-cylinder material="color: #000" radius="0.005" height="0.15" position="0 0.075 0"></a-cylinder>
-                  </a-entity>
+          <a-entity id="left-wall" position="-2.5 1.5 0" >
+            <a-box mixin="wall" width="0.15" height="3" depth="5" src="#left-wall-texture"></a-box>
+            <a-box mixin="black-wall" position="-2 0 2.5" width="0.15" height="9" depth="10"></a-box>
+
+            <a-box mixin="wood-color" position="0 -1.45 0" width="0.16" height="0.1" depth="5"></a-box>    
+          </a-entity>
+
+          <a-entity id="right-wall" position="2.5 1.5 0">
+            <a-box mixin="wall" width="0.15" height="3" depth="5" src="#right-wall-texture"></a-box>
+            <a-box mixin="black-wall" position="2 0 2.5" width="0.15" height="9" depth="10" material="roughness: 1;"></a-box>
+
+            <a-box mixin="wood-color" position="0 -1.45 0" width="0.16" height="0.1" depth="5"></a-box>
+            <!--- clock: --->
+              <a-entity id="clock" position="-0.10 0.512 -1.52">
+                <a-cylinder material="color: #FFF" rotation="0 0 90" radius="0.25" height="0.02"  toon="thickness:0.03" src="#clock-texture"></a-cylinder>
+                <a-entity id="hours" position="-0.01 0 0">
+                  <a-cylinder material="color: #000" radius="0.005" height="0.10" position="0 0.05 0"></a-cylinder>
                 </a-entity>
-            </a-entity>
-
-            <a-entity id="front-wall" position="0 0 -2.5">
-              <a-box mixin="wall" position="0 3.25 0"  width="5" height="1" depth="0.08"></a-box>
-              <a-box mixin="black-wall" position="0 4.07 .08"  width="9" height="2.1" depth="0.08"></a-box>
-              <a-box mixin="wall" position="0 0.5 0"  width="5" height="1" depth="0.08"></a-box>
-              <a-box mixin="wall" position="-3 1.5 0" width="3" height="8" depth="0.08"></a-box>
-              <a-box mixin="wall" position="3 1.5 0"  width="3" height="8" depth="0.08"></a-box>
-              <a-box mixin="wood-color" position="0 0.05 0" width="5" height="0.1" depth="0.09"></a-box>
-              
-              <a-box mixin="black-wall" position="-4 1.5 .08" width="3" height="8" depth="0.08"></a-box>
-              <a-box mixin="black-wall" position="4 1.5 .08"  width="3" height="8" depth="0.08"></a-box>
-
-              <a-entity id="window">
-                  <a-box position="0 2.75 0" width="3" height="0.05" depth="0.1" mixin="wood-color" ></a-box>
-                  <a-box position="0 1 0" width="3" height="0.05" depth="0.1" mixin="wood-color" ></a-box>
-                  <a-box position="-1.5 1.875 0" width="1.80" height="0.05" depth="0.1" mixin="wood-color" rotation="0 0 90"></a-box>
-                  <a-box position="1.5 1.875 0" width="1.80" height="0.05" depth="0.1" mixin="wood-color" rotation="0 0 90"></a-box>
-              </a-entity>
-
-            </a-entity>
-
-            <a-entity id="back-wall-all" position="0 0 2.5">
-              <a-entity id="back-wall">
-                <a-box mixin="wall" position="0 2.75 0" width="5" height="0.5" depth="0.15"></a-box>
-                <a-box mixin="wall" position="-2 1.5 0" width="1" height="3" depth="0.15"></a-box>
-                <a-box mixin="wall" position="1 1.5 0" width="3" height="3" depth="0.15" src="#back-wall-texture"></a-box>
-                <a-box mixin="wood-color" position="-2 0.05 0" width="1.01" height="0.1" depth="0.16"></a-box>
-                <a-box mixin="wood-color" position="1 0.05 0"  width="3.01" height="0.1" depth="0.16"></a-box>
-
-                <a-entity id="door">
-                    <a-box position="-1 2.475 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="width: 0.99; height: 0.1"></a-box>
-                    <a-box position="0 0.6 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="height: 1.2"></a-box>
-                    <a-box position="-1.475 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.1"></a-box>
-                    <a-box position="-0.525 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.1"></a-box>
-                    <a-box position="-1 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.025"></a-box>
-                    <a-box position="-1 1.8 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="width: 0.99; height: 0.025"></a-box>
+                <a-entity id="minutes" position="-0.01 0 0">
+                  <a-cylinder material="color: #000" radius="0.005" height="0.15" position="0 0.075 0"></a-cylinder>
                 </a-entity>
               </a-entity>
-
-            </a-entity>
-
-
-            <a-entity id="ceiling" position="0 3 2.5">
-              <a-box mixin="wall"                                position="0 0.5  -2.5" width="5" height="1" depth="5"></a-box>
-              <a-box mixin="black-wall" material="side: double;" position="0 0.52 -2.5" width="5" height="1" depth="5"></a-box>
-              <a-box mixin="black-wall" position="0 2.5 0" width="10" height="1" depth="10"></a-box>
-            </a-entity>
-
-          </a-entity> <!-- room ends -->
-          
-          
-          <a-box id="floor" material="color: #FFF;repeat: 6 6" position="0 -0.5 0" width="5" depth="5" height="1" shadow="cast:true;receive:true" src="#parquet"></a-box>
-        </a-entity> <!-- room-shrink ends -->
-        
-        <a-box id="building" material="color: #666666" position="0 -15.5 2.5" width="10" depth="10.3" height="29" shadow="cast:true;receive:true"></a-box>
-        
-        <a-entity id="objects-in-room" position="0 0 0"> <!-- non-shrinkable -->
-
-          <a-entity id="lamp-object" position="0 3 -0.5">
-            <a-sphere id="lamp" position="0 -0.32 0" radius="0.15" color="#E0D0C0" shadow="cast:false;receive:false" material="shader:standard;side:double" toon="thickness:0.03;">
-              <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.05; castShadow: true; decay:1; distance:40;"></a-entity>
-              <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
-            </a-sphere>
-            <a-cylinder mixin="wall" color="#AAA" radius="0.005" height="0.375" position="0 -0.17 0"></a-cylinder>
-            <a-cylinder mixin="wall" color="#AAA" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
           </a-entity>
-          
-          <a-entity id="drumkit" position="0.88 0 0.4" scale="1.3 1.3 1.3">
-            
-            <a-entity id="bass-drum" position="0 0.32 0" rotation="0 0 90">
-              <a-cylinder material="color: #900590" position="0 0 0" radius="0.3" height="0.4" toon="thickness:0.02" shadow="cast:true;receive:false" ></a-cylinder>
-              <a-cylinder position="0 0.2 0" radius="0.29" height="0.01" color="#FFF" shadow="cast:false;receive:false" src="#bass-drum-texture"></a-cylinder>
-              <a-cylinder position="0 -0.2 0" radius="0.29" height="0.01" color="#000" shadow="cast:false;receive:false"></a-cylinder>
-            </a-entity>
-            <a-entity gltf-model="#kdrum-leg-model" scale="0.04 0.04 0.04" rotation="0 -90 0" position="0.15 0 -0.07" modify-materials="" shadow="cast:true"></a-entity>
-            <a-entity gltf-model="#kdrum-leg-model" scale="0.04 0.04 0.04" rotation="0 90 0" position="-0.25 0 0.07" modify-materials="" shadow="cast:true"></a-entity>
 
-            <a-entity position="0.4 0.5 0.3">
-              <a-cylinder id="snare-drum" position="0 0 0" radius="0.15" height="0.18" material="color: #900590" shadow="cast:true;receive:false" toon="thickness:0.04;">
-                <a-cylinder position="0 0 0" radius="0.145" height="0.19" color="#FFF">
-                  <a-cylinder position="0 0 0" radius="0.07" height="0.192" color="#000"></a-cylinder>
-                </a-cylinder>                
-              </a-cylinder>
-              <a-entity gltf-model="#snare-tripod-model" scale="0.04 0.04 0.04" position="0.2 -0.5 -0.2" modify-materials shadow="cast:true"></a-entity>
+          <a-entity id="front-wall" position="0 0 -2.5">
+            <a-box mixin="wall" position="0 3.25 0"  width="5" height="1" depth="0.08"></a-box>
+            <a-box mixin="black-wall" position="0 4.07 .08"  width="9" height="2.1" depth="0.08"></a-box>
+            <a-box mixin="wall" position="0 0.5 0"  width="5" height="1" depth="0.08"></a-box>
+            <a-box mixin="wall" position="-3 1.5 0" width="3" height="8" depth="0.08"></a-box>
+            <a-box mixin="wall" position="3 1.5 0"  width="3" height="8" depth="0.08"></a-box>
+            <a-box mixin="wood-color" position="0 0.05 0" width="5" height="0.1" depth="0.09"></a-box>
+
+            <a-box mixin="black-wall" position="-4 1.5 .08" width="3" height="8" depth="0.08"></a-box>
+            <a-box mixin="black-wall" position="4 1.5 .08"  width="3" height="8" depth="0.08"></a-box>
+
+            <a-entity id="window">
+                <a-box position="0 2.75 0" width="3" height="0.05" depth="0.1" mixin="wood-color" ></a-box>
+                <a-box position="0 1 0" width="3" height="0.05" depth="0.1" mixin="wood-color" ></a-box>
+                <a-box position="-1.5 1.875 0" width="1.80" height="0.05" depth="0.1" mixin="wood-color" rotation="0 0 90"></a-box>
+                <a-box position="1.5 1.875 0" width="1.80" height="0.05" depth="0.1" mixin="wood-color" rotation="0 0 90"></a-box>
             </a-entity>
 
-            <a-entity position="0.3 0 0">
-              <a-entity id="hh-top" position="-0.03737 0 -0.45469">
-                <a-cone color="	#D4AF37" radius-bottom="0.12" radius-top="0" height="0.07" position="0 0.895 0" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.04"></a-cone>
-                <a-cone color="	#D4AF37" radius-bottom="0.18" radius-top="0" height="0.05" position="0 0.88 0" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.03"></a-cone>
+          </a-entity>
+
+          <a-entity id="back-wall-all" position="0 0 2.5">
+            <a-entity id="back-wall">
+              <a-box mixin="wall" position="0 2.75 0" width="5" height="0.5" depth="0.15"></a-box>
+              <a-box mixin="wall" position="-2 1.5 0" width="1" height="3" depth="0.15"></a-box>
+              <a-box mixin="wall" position="1 1.5 0" width="3" height="3" depth="0.15" src="#back-wall-texture"></a-box>
+              <a-box mixin="wood-color" position="-2 0.05 0" width="1.01" height="0.1" depth="0.16"></a-box>
+              <a-box mixin="wood-color" position="1 0.05 0"  width="3.01" height="0.1" depth="0.16"></a-box>
+
+              <a-entity id="door">
+                  <a-box position="-1 2.475 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="width: 0.99; height: 0.1"></a-box>
+                  <a-box position="0 0.6 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="height: 1.2"></a-box>
+                  <a-box position="-1.475 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.1"></a-box>
+                  <a-box position="-0.525 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.1"></a-box>
+                  <a-box position="-1 1.85 0" width="1.55" height="0.05" depth="0.05" mixin="wood-color" rotation="0 0 90" geometry="width: 1.3; height: 0.025"></a-box>
+                  <a-box position="-1 1.8 0" width="3" height="0.05" depth="0.05" mixin="wood-color" geometry="width: 0.99; height: 0.025"></a-box>
               </a-entity>
-              <a-cone color="	#C49F27" radius-bottom="0" radius-top="0.18" height="0.05" position="-0.03737 0.8 -0.45469" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.03" shadow="cast:true"></a-cone>
-              <a-entity gltf-model="#hh-tripod-model" scale="0.04 0.04 0.04" rotation="0 -125 0" position="0 0 -0.2" modify-materials shadow="cast:true"></a-entity>
             </a-entity>
-            
+
           </a-entity>
 
-          <!-- table -->
-          <a-entity id="table-object" position="2.14 0.26 -1.2" rotation="0 -90 0">
-            <a-plane mixin="table" material="src:#table-texture; repeat:1 1; opacity: 0.999;" position="0 0.356 0" width="0.6" height="0.6" rotation="-90 0 0"></a-plane>
-            <a-box mixin="table" material="opacity: 0.999;" position="0 0.315 0" width="0.6" height="0.08" depth="0.6" toon="thickness: 0.03"></a-box>
-            <a-box mixin="table" position="-0.26 0  0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
-            <a-box mixin="table" position="-0.26 0 -0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
-            <a-box mixin="table" position=" 0.26 0  0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
-            <a-box mixin="table" position=" 0.26 0 -0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
-          </a-entity>
-          
-          
-        </a-entity>
-        
-        
-        <a-entity id="back-room" position="0 0 0">
-          <a-plane material="src:#JPvid; shader:flat;" rotation="0 180 0" position="-2 2 5" height="2" width="1" shadow="receive:false; cast:false"></a-plane>
-          <a-box mixin="black-wall" shadow="receive:true; cast:true" id="back-room-back-wall" position="0 1.5 6.5" rotation="0 0 0" width="10" height="8" depth="0.15"></a-box>
-          <a-box mixin="black-wall" shadow="receive:true; cast:true" id="back-room-floor" position="0 -0.1 2.5" rotation="0 0 0" width="10" height="0.05" depth="10"></a-box>
-        </a-entity>
-        
-        <!-- world -->
-        <a-entity id="world">
-          <a-triangle id="mountain1" color="#205"  vertex-c="-800 -50 -500"  vertex-b="-400 5 -500" vertex-a="500 -50 -500"  ></a-triangle>
-          <a-triangle id="mountain2" color="#205"  vertex-c="-600 -50 -500"  vertex-b="-100 20 -500"    vertex-a="500 -50 -500"  ></a-triangle>
-          <a-triangle id="mountain3" color="#205"  vertex-c="0 -50 -500" vertex-b="200 30 -500" vertex-a="800 -50 -500" ></a-triangle>
-          <a-triangle id="mountain4" color="#205"  vertex-c="200 -50 -500" vertex-b="600 5 -500" vertex-a="1000 -50 -500" ></a-triangle>
 
-          <a-circle id="bottom" material="src:#street-block; color: #888; roughness: 1; repeat:9 13;" position="0 -30 52" rotation="-90 0 0" radius="950" shadow="receive:true; cast:false"></a-circle>
-          <!-- park -->
-          <a-box position="0 -30 -5" material="color: #666; src:#grass-texture; roughness: 1; repeat: 2 2" width="30" height="0.2" depth="10"></a-box>
-          <a-box position="0 -30 -5" material="color: #333; roughness: 1" width="31" height="0.05" depth="11"></a-box>
-          
-          <a-sphere id="sun" position="0 1414.21 0" radius="30" color="#FFFF00" material="shader:flat; fog: false" geometry="">
-            <a-entity id="sunlight" light="type: point; color: #FED; intensity: 0.1; castShadow: true; decay:0; distance: 2000" position="0 0 0"></a-entity>
+          <a-entity id="ceiling" position="0 3 2.5">
+            <a-box mixin="wall"                                position="0 0.5  -2.5" width="5" height="1" depth="5"></a-box>
+            <a-box mixin="black-wall" material="side: double;" position="0 0.52 -2.5" width="5" height="1" depth="5"></a-box>
+            <a-box mixin="black-wall" position="0 2.5 0" width="10" height="1" depth="10"></a-box>
+          </a-entity>
+
+        </a-entity> <!-- room ends -->
+
+
+        <a-box id="floor" material="color: #FFF;repeat: 6 6" position="0 -0.5 0" width="5" depth="5" height="1" shadow="cast:true;receive:true" src="#parquet"></a-box>
+      </a-entity> <!-- room-shrink ends -->
+
+      <a-box id="building" material="color: #666666" position="0 -15.5 2.5" width="10" depth="10.3" height="29" shadow="cast:true;receive:true"></a-box>
+
+      <a-entity id="objects-in-room" position="0 0 0"> <!-- non-shrinkable -->
+
+        <a-entity id="lamp-object" position="0 3 -0.5">
+          <a-sphere id="lamp" position="0 -0.32 0" radius="0.15" color="#E0D0C0" shadow="cast:false;receive:false" material="shader:standard;side:double" toon="thickness:0.03;">
+            <a-entity id="room-light" position="0 0 0" light="type: point; color: #FFEFDF; intensity: 0.05; castShadow: true; decay:1; distance:40;"></a-entity>
+            <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
           </a-sphere>
-
-          <a-entity id="ambient" light="type: ambient; color: #FFF; intensity:0"></a-entity>
-          <a-entity position="0 0 -2.5" id="street-light" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
-          <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 0.2; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
-          
-          <!-- billboard -->
-          <a-entity id="billboard" position="0 -7 -32">
-            <a-box position="0 0 0" material="color: #DDD; roughness: 0.5;" shadow="receive:true; cast:true" width="16" height="8" depth="0.2" src="#billboard-texture" ></a-box>
-            <a-box position="-7 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
-            <a-box position="0 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
-            <a-box position="7 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
-          </a-entity>
-          
+          <a-cylinder mixin="wall" color="#AAA" radius="0.005" height="0.375" position="0 -0.17 0"></a-cylinder>
+          <a-cylinder mixin="wall" color="#AAA" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
         </a-entity>
 
-        <a-entity id="rig" movement-controls>
-          <a-entity id="cameraRig" position="0 1.7 0" rotation="0 0 360"> <!-- 0 1.7 0 -->
-            <a-entity id="head" camera look-controls room-boundaries>
-            </a-entity>
+        <a-entity id="drumkit" position="0.88 0 0.4" scale="1.3 1.3 1.3">
 
-            <a-entity teleport-controls="cameraRig: #cameraRig; button: trigger;"
-              vive-controls="hand: left"
-              oculus-touch-controls="hand: left"
-              microsoft-motion-controls="hand: left"
-              daydream-controls="left" gearvr-controls="left"
-              x-button-listener
-              y-button-listener>
-            </a-entity>
-
-            <a-entity teleport-controls="cameraRig: #cameraRig; type: line; button: trigger;"
-              vive-controls="hand: right"
-              microsoft-motion-controls="hand: right"
-              oculus-touch-controls="hand: right"
-              daydream-controls="right" gearvr-controls="right"
-              a-button-listener
-              b-button-listener>
-            </a-entity>
+          <a-entity id="bass-drum" position="0 0.32 0" rotation="0 0 90">
+            <a-cylinder material="color: #900590" position="0 0 0" radius="0.3" height="0.4" toon="thickness:0.02" shadow="cast:true;receive:false" ></a-cylinder>
+            <a-cylinder position="0 0.2 0" radius="0.29" height="0.01" color="#FFF" shadow="cast:false;receive:false" src="#bass-drum-texture"></a-cylinder>
+            <a-cylinder position="0 -0.2 0" radius="0.29" height="0.01" color="#000" shadow="cast:false;receive:false"></a-cylinder>
           </a-entity>
+          <a-entity gltf-model="#kdrum-leg-model" scale="0.04 0.04 0.04" rotation="0 -90 0" position="0.15 0 -0.07" modify-materials="" shadow="cast:true"></a-entity>
+          <a-entity gltf-model="#kdrum-leg-model" scale="0.04 0.04 0.04" rotation="0 90 0" position="-0.25 0 0.07" modify-materials="" shadow="cast:true"></a-entity>
+
+          <a-entity position="0.4 0.5 0.3">
+            <a-cylinder id="snare-drum" position="0 0 0" radius="0.15" height="0.18" material="color: #900590" shadow="cast:true;receive:false" toon="thickness:0.04;">
+              <a-cylinder position="0 0 0" radius="0.145" height="0.19" color="#FFF">
+                <a-cylinder position="0 0 0" radius="0.07" height="0.192" color="#000"></a-cylinder>
+              </a-cylinder>                
+            </a-cylinder>
+            <a-entity gltf-model="#snare-tripod-model" scale="0.04 0.04 0.04" position="0.2 -0.5 -0.2" modify-materials shadow="cast:true"></a-entity>
+          </a-entity>
+
+          <a-entity position="0.3 0 0">
+            <a-entity id="hh-top" position="-0.03737 0 -0.45469">
+              <a-cone color="	#D4AF37" radius-bottom="0.12" radius-top="0" height="0.07" position="0 0.895 0" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.04"></a-cone>
+              <a-cone color="	#D4AF37" radius-bottom="0.18" radius-top="0" height="0.05" position="0 0.88 0" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.03"></a-cone>
+            </a-entity>
+            <a-cone color="	#C49F27" radius-bottom="0" radius-top="0.18" height="0.05" position="-0.03737 0.8 -0.45469" material="color: #D4AF37; metalness: 0.5" toon="thickness: 0.03" shadow="cast:true"></a-cone>
+            <a-entity gltf-model="#hh-tripod-model" scale="0.04 0.04 0.04" rotation="0 -125 0" position="0 0 -0.2" modify-materials shadow="cast:true"></a-entity>
+          </a-entity>
+
         </a-entity>
 
-    </a-scene>
+        <!-- table -->
+        <a-entity id="table-object" position="2.14 0.26 -1.2" rotation="0 -90 0">
+          <a-plane mixin="table" material="src:#table-texture; repeat:1 1; opacity: 0.999;" position="0 0.356 0" width="0.6" height="0.6" rotation="-90 0 0"></a-plane>
+          <a-box mixin="table" material="opacity: 0.999;" position="0 0.315 0" width="0.6" height="0.08" depth="0.6" toon="thickness: 0.03"></a-box>
+          <a-box mixin="table" position="-0.26 0  0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
+          <a-box mixin="table" position="-0.26 0 -0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
+          <a-box mixin="table" position=" 0.26 0  0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
+          <a-box mixin="table" position=" 0.26 0 -0.26" width="0.08" height="0.55" depth="0.08" toon="thickness: 0.09; depthWrite: false"></a-box>
+        </a-entity>
+
+
+      </a-entity>
+
+
+      <a-entity id="back-room" position="0 0 0">
+        <a-plane material="src:#JPvid; shader:flat;" rotation="0 180 0" position="-2 2 5" height="2" width="1" shadow="receive:false; cast:false"></a-plane>
+        <a-box mixin="black-wall" shadow="receive:true; cast:true" id="back-room-back-wall" position="0 1.5 6.5" rotation="0 0 0" width="10" height="8" depth="0.15"></a-box>
+        <a-box mixin="black-wall" shadow="receive:true; cast:true" id="back-room-floor" position="0 -0.1 2.5" rotation="0 0 0" width="10" height="0.05" depth="10"></a-box>
+      </a-entity>
+
+      <!-- world -->
+      <a-entity id="world">
+        <a-triangle id="mountain1" color="#205"  vertex-c="-800 -50 -500"  vertex-b="-400 5 -500" vertex-a="500 -50 -500"  ></a-triangle>
+        <a-triangle id="mountain2" color="#205"  vertex-c="-600 -50 -500"  vertex-b="-100 20 -500"    vertex-a="500 -50 -500"  ></a-triangle>
+        <a-triangle id="mountain3" color="#205"  vertex-c="0 -50 -500" vertex-b="200 30 -500" vertex-a="800 -50 -500" ></a-triangle>
+        <a-triangle id="mountain4" color="#205"  vertex-c="200 -50 -500" vertex-b="600 5 -500" vertex-a="1000 -50 -500" ></a-triangle>
+
+        <a-circle id="bottom" material="src:#street-block; color: #888; roughness: 1; repeat:9 13;" position="0 -30 52" rotation="-90 0 0" radius="950" shadow="receive:true; cast:false"></a-circle>
+        <!-- park -->
+        <a-box position="0 -30 -5" material="color: #666; src:#grass-texture; roughness: 1; repeat: 2 2" width="30" height="0.2" depth="10"></a-box>
+        <a-box position="0 -30 -5" material="color: #333; roughness: 1" width="31" height="0.05" depth="11"></a-box>
+
+        <a-sphere id="sun" position="0 1414.21 0" radius="30" color="#FFFF00" material="shader:flat; fog: false" geometry="">
+          <a-entity id="sunlight" light="type: point; color: #FED; intensity: 0.1; castShadow: true; decay:0; distance: 2000" position="0 0 0"></a-entity>
+        </a-sphere>
+
+        <a-entity id="ambient" light="type: ambient; color: #FFF; intensity:0"></a-entity>
+        <a-entity position="0 0 -2.5" id="street-light" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
+        <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 0.2; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
+
+        <!-- billboard -->
+        <a-entity id="billboard" position="0 -7 -32">
+          <a-box position="0 0 0" material="color: #DDD; roughness: 0.5;" shadow="receive:true; cast:true" width="16" height="8" depth="0.2" src="#billboard-texture" ></a-box>
+          <a-box position="-7 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
+          <a-box position="0 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
+          <a-box position="7 -5 -0.2" material="color: #333; roughness: 0.5;" width="0.2" height="2" depth="0.2"></a-box>
+        </a-entity>
+
+      </a-entity>
+
+      <a-entity id="rig" movement-controls>
+        
+        <a-entity id="cameraRig" position="0 1.7 0" rotation="0 0 360"> <!-- 0 1.7 0 -->
+          <a-entity id="head" camera look-controls room-boundaries>
+            <!---
+            <a-entity id="test" position="0 0 -0.01" text="value: Spacebarman; anchor: center; align: center; width: 0.05; font:https://cdn.aframe.io/fonts/SourceCodePro.fnt; "></a-entity>
+            -->
+          </a-entity>
+
+          <a-entity teleport-controls="cameraRig: #cameraRig; button: trigger;"
+            vive-controls="hand: left"
+            oculus-touch-controls="hand: left"
+            microsoft-motion-controls="hand: left"
+            daydream-controls="left" gearvr-controls="left"
+            x-button-listener
+            y-button-listener>
+          </a-entity>
+
+          <a-entity teleport-controls="cameraRig: #cameraRig; type: line; button: trigger;"
+            vive-controls="hand: right"
+            microsoft-motion-controls="hand: right"
+            oculus-touch-controls="hand: right"
+            daydream-controls="right" gearvr-controls="right"
+            a-button-listener
+            b-button-listener>
+          </a-entity>
+        </a-entity>
+      </a-entity>
+
+  </a-scene>
+  <!--- A-SCENE ENDS --->
     
-  <div id="veil">
-    <div class="instructions">
-      <img id="logo" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fspacebarman-logo.png?v=1589649870126" />
-      <h1>
-        Lockdown - <a href="http://www.spacebarman.com" target="_blank" class="spacebarman">Spacebarman</a>
-      </h1>
-      <p>
-        Best experienced with Oculus VR headsets.<br />
-        On a laptop or desktop computer? Use 'WASD' keys or arrow keys to move, mouse to look.<br />
-        (Trackpad not recommended.)<br />
-        <span title="WARNING: This 3D/VR experience may potentially trigger seizures for people with photosensitive epilepsy. Viewer discretion is advised.">
-          <span id="warning">&#9888;</span> Seizure warning!
-        </span>
-      </p>
+  <!--- DOM STARTS --->
+  <div id="container">
+    <div class="instructions">       
+        <a href="http://www.spacebarman.com" target="_blank" class="spacebarman"><img id="logo" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fspacebarman-logo.png?v=1589649870126" /></a>
+        <h1>
+          Lockdown - a VR videoclip
+        </h1>
+        <p id="description">
+          Best experienced with Oculus VR headsets.<br />
+          <br />
+          On a laptop or desktop computer?<br />
+          Use 'WASD' keys or arrow keys to move, mouse to look.<br />
+          (Trackpad not recommended.)<br />
+          
+          <span title="WARNING: This 3D/VR experience may potentially trigger seizures for people with photosensitive epilepsy. Viewer discretion is advised." id="warning-text">
+            <span id="warning">&#9888;</span> SEIZURE WARNING
+          </span>
+        </p>
+        <p id="credits" class="hidden">
+          Lockdown is a track from in our EP 'FOMO'. Listen to it <a href="http://www.spacebarman.com/?from=fomolisten">here</a><br />
+          <br />
+          <span class="italic">Colossal head of a young man</span> painting by <a href="http://www.armandomesias.com/" target="_blank">Armando Mesías</a>.<br/>
+          <span class="italic">Little stone</span> painting by Aparato.<br />
+          Design and coding: <a href="http://www.jpcarrascal.com" target="_blank">JP Carrascal</a>
+          <br />
+          <a class="sm" id="tw-share" href="#" target="_blank">Tweet this</a> &bull;
+          <a class="sm" id="fb-share" href="#" target="_blank">Share on Facebook</a>
+        </p>
+      
+        <a class="toggle-credits">Credits &#9654;</a>
     </div>
     
-    <div class="instructions">
-      <div id="myEnterVRButton" class="start">Loading...</div>
-      <div id="restart" style="display:none">Restart</div>
+    <div class="ctas">
+      <div id="myEnterVRButton" class="cta-button" style="display:block">Loading...</div>
+      <div id="restart" class="cta-button" style="display:none">Restart</div>
+      <a href="http://www.spacebarman.com/?from=fomolisten">
+        <div id="play-ep" class="cta-button" style="display:none">Listen to our new EP 'FOMO'</div>
+      </a>
     </div>
     
+    <!---
     <div class="instructions">
       <p>
         <a class="sm" id="tw-share" href="#" target="_blank">Tweet this</a> &bull;
@@ -295,13 +321,10 @@
         <a href="https://www.youtube.com/spacebarmanvideo" target="_blank">Youtube</a>
         <br />
       </p>
-      <p class="credits">          
-        "Colossal head of a young man" painting by <a href="http://www.armandomesias.com/" target="_blank">Armando Mesías</a>.<br/>
-        "Little stone" painting by Aparato.<br/>
-        Design and coding: <a href="http://www.jpcarrascal.com" target="_blank">JP Carrascal</a>
-      </p>
     </div>
+    --->
     
   </div>
+  <!--- DOM ENDS --->
   </body>
 </html>

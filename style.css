@@ -1,23 +1,32 @@
 body {
-  background-color: lightblue;
-  color: #DDD;
-  font-family: "Trebuchet MS";
+  font-family: century-gothic, "Trebuchet MS", sans-serif;
   display: flex;
-  flex-direction: column;
+  flex-flow: column nowrap;
+  justify-content: center;
   align-items: center;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: #CCC;
+  background-color: transparent;
 }
 
-#veil {
-  text-align: center;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-  top: 0;
-  bottom: 0;
-  margin: 0;
-  font-size: 0.9em;
+#container
+{
+    top:0;
+    z-index: 12;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    font-size: 1em;
+    text-align: center;
+    overflow: visible;
+    /*white-space:nowrap;*/
 }
 
 h1
@@ -33,60 +42,102 @@ h1
   margin-right: auto;
 }
 
-#warning
-{
-  font-size: 1.2em;
-  color: red;
+#warning {
+  color: #ff7223;
 }
 
-#start, #restart, #myEnterVRButton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 250px;
-  padding-left: 20px;
-  padding-right: 20px;
-  height: 60px;
-  margin: auto;
-  font-size: 2.5em;
-  border: 2px solid white;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: rgba(255,255,255,0.3);
-  user-select: none;
+#warning-text {
+  font-weight: bold;
+}
+
+.ctas
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.5em;
+    width: 560px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cta-button {
+    flex-grow: 1;
+    flex-basis: 0;
+    background-color: #33a8c1;
+    color: #272729;
+    font-size: 1.9em;
+    text-shadow: none;
+    cursor: pointer;
+}
+
+.cta-button:hover
+{
+    color: #33a8c1;
+    background-color: #272729;
+}
+
+
+#play-ep, #myEnterVRButton
+{
+    background-color: #ff7223;
+    color: #272729;
+}
+
+#play-ep:hover, #myEnterVRButton:hover
+{
+    color: #ff7223;
+    background-color: #272729;
 }
 
 .instructions {
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   user-select: none;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-  line-height: 1.2;
+  width: 560px;
+  background-color: #171719;
 }
 
-a
-{
-  color:#DDD;
+p {
+  padding: 10px;
 }
 
 .spacebarman
 {
   text-decoration: none;
+  margin-top: 10px;
 }
 
-a.spacebarman:hover
-{
-  text-decoration: underline;
-}
-
-#start:hover
-{
-  background-color: rgba(255,255,255,0.6);
+.italic {
+  font-style: italic;
 }
 
 .sm
 {
   font-weight: bold;
+}
+
+.toggle-credits {
+  align-self: flex-end;
+  position: relative;
+  bottom: 10px;
+  text-align: right;
+  margin-right: 20px;
+}
+
+a
+{
+  cursor: pointer;
+  color: #CCC;
+}
+
+a:hover {
+  color: #ff7223;
+}
+
+
+.hidden {
+  display: none;
 }
