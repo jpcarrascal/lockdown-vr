@@ -567,11 +567,11 @@ AFRAME.registerComponent("scene-update", {
     /*---- Audio update ends ----*/
     /*---- Room boundaries start ----*/
     let head = document.querySelector('#rig');
+    let headX = head.object3D.position.x;
+    let headZ = head.object3D.position.z;
     // Keep player inside the room:
     if(!debug)
     {
-      let headX = head.object3D.position.x;
-      let headZ = head.object3D.position.z;
       let boundary = 2.5 * shrinkingFactor * 0.8;
       if(headX > boundary){
           head.object3D.position.x = boundary;
@@ -587,7 +587,10 @@ AFRAME.registerComponent("scene-update", {
       }
     }
       /*---- Room boundaries ends ----*/
-    
+    if(document.querySelector('#hud')) {
+      var headLocation = (Math.round(headX * 100)/100)+","+(Math.round(headZ * 100)/100);
+      document.querySelector('#hud').setAttribute("text",{value: headLocation}); 
+    }
   }
 });
 

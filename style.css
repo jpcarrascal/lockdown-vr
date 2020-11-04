@@ -70,6 +70,7 @@ h1
     font-size: 1.9em;
     text-shadow: none;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .cta-button:hover
@@ -127,9 +128,8 @@ p {
   margin-right: 20px;
 }
 
-a
-{
-  cursor: pointer;
+a {
+  text-decoration: underline;
   color: #CCC;
 }
 
@@ -137,6 +137,12 @@ a:hover {
   color: #ff7223;
 }
 
+.toggle-credits {
+  text-decoration: none;
+  color: #CCC;
+  cursor: pointer;
+  display: inline;
+}
 
 .hidden {
   display: none;
