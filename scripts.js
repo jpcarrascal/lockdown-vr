@@ -285,6 +285,7 @@ AFRAME.registerComponent("scene-update", {
   schema: {
     
   },
+  
   init: function () {
     this.T = T; // Time constant
     this.night = false;
@@ -300,9 +301,8 @@ AFRAME.registerComponent("scene-update", {
     // Audio stuff:
     this.peak = false;
     this.peakCount = -1;
-    
-    
   },
+  
   pause: function() {
     console.log("2.MAIN LOOP PAUSED")
     startTime = 0;
@@ -310,9 +310,11 @@ AFRAME.registerComponent("scene-update", {
     this.dusk = false;
     this.dawn = false;
   },
+  
   play: function() {
 
   },
+  
   tick: function(time, timeDelta) {
     if(startTime == 0)
       startTime = time;
