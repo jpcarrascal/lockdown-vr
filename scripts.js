@@ -7,10 +7,22 @@ window.addEventListener('load', function() {
   document.querySelector('#restart').addEventListener('click', function (e) {
     location.reload();
   });
+  
+  document.querySelector('.toggle-credits').addEventListener('click', function (e) {
+    var elem = document.querySelector('.toggle-credits');
+    document.querySelector('#description').classList.toggle("hidden");
+    document.querySelector('#credits').classList.toggle("hidden");
+    if(elem.innerText.localeCompare("Credits ▶") === 0)
+      elem.innerText = "◀ Back";
+    else
+      elem.innerText = "Credits ▶";
+  });
+  
   document.querySelector("#JPvid").addEventListener('ended', function() {
     console.log("X.VIDEO ENDED")
     document.querySelector('#myEnterVRButton').style.display="none";
-    document.querySelector('#restart').style.display="flex";
+    //document.querySelector('#restart').style.display="block";
+    document.querySelector('#play-ep').style.display="block";
   });
   document.querySelector('a-scene').addEventListener('exit-vr', function () {
       console.log("EXIT VR!");
@@ -67,7 +79,6 @@ function checkLoad() {
   var vid = document.querySelector("#JPvid");
   var start = document.querySelector('#myEnterVRButton');
   var veil = document.querySelector('#veil');
-  console.log("vidstate: "+vid.readyState)
   if (vid.readyState === 4) {
     if(!debug) document.querySelector('#scene').pause();
     console.log("3.VIDEO READY")
@@ -334,6 +345,7 @@ AFRAME.registerComponent("scene-update", {
       sun.object3D.position.y = R*orbitCos;
       sun.object3D.position.z = R*orbitSin;
       sunlight2.object3D.position.y = orbitCos*12;
+      sunlight2.object3D.position.z = orbitSin*12;
 
       hours.object3D.rotation.x += clockDirection*timeDelta/(this.T/6);//= clockDirection*((6*time/this.T)+Math.PI/4);
       minutes.object3D.rotation.x = hours.object3D.rotation.x*12;
