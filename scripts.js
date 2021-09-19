@@ -1,6 +1,8 @@
 /* globals AFRAME, THREE, THREEx */
 var debug = false;
+var vrReady = false;
 window.addEventListener('load', function() {
+  document.querySelector("#JPvid").pause();
   console.log("1.WINDOW LOADED")
   document.querySelector("#fb-share").href="https://facebook.com/sharer/sharer.php?u="+window.location;
   document.querySelector("#tw-share").href="https://twitter.com/intent/tweet?text=Lockdown, a VR experience by @spacebarman: "+window.location;
@@ -20,19 +22,26 @@ window.addEventListener('load', function() {
   
   document.querySelector("#JPvid").addEventListener('ended', function() {
     console.log("X.VIDEO ENDED");
-    document.querySelector('.toggle-credits').click();
-    document.querySelector('#container').style.display = "flex";
-    document.querySelector('#startButton').style.display="none";
-    document.querySelector('#restart').style.display="block";
-    document.querySelector('#play-ep').style.display="block";
+    setEndScreen();
   });
+  
+  document.querySelector('a-scene').addEventListener('loaded', function () {
+    vrReady = true;
+  });
+  
+  if(!AFRAME.utils.device.isMobileVR()) {
+    console.log("****************Let's replace buttons...");
+    document.querySelector('#startButton').style.display = "none";
+    document.querySelector('#startButtonDeskMob').style.display = "block";
+  }
+  
   document.querySelector('a-scene').addEventListener('exit-vr', function () {
       console.log("EXIT VR!");
       const mobile = ( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
       // Restart experience:
       if(mobile) {
         location.reload();
-      }
+      } else document.querySelector("#container").style.display = "flex";
     });
   document.querySelector('a-scene').addEventListener('enter-vr', function () {
       console.log("ENTERED VR!");
@@ -62,6 +71,16 @@ window.addEventListener('load', function() {
       case 32:
         spacebarHandler();
         break;
+      case 27:
+        if(!AFRAME.utils.device.isMobileVR()) {
+          var container = document.querySelector('#container');
+          if(container.style.display == "none") {
+            setEndScreen();
+          } else {
+            container.style.display = "none";
+          }
+          break;
+        }
     }
   });
 
@@ -74,12 +93,16 @@ window.addEventListener('load', function() {
 // but sometimes the video loads early and no more 'loadeddata' events are not triggered anymore.
 function checkLoad() {
   var vid = document.querySelector("#JPvid");
-  var start = document.querySelector('#startButton');
+  if(AFRAME.utils.device.isMobileVR())
+    var start = document.querySelector('#startButton');
+  else
+    var start = document.querySelector('#startButtonDeskMob');
   var container = document.querySelector('#container');
-  if (vid.readyState === 4) {
-    
+  if (vid.readyState === 4 && vrReady == true) {
+    vid.pause();
+    vid.currentTime = 0;
     if(!debug) document.querySelector('#scene').pause();
-    console.log("3.VIDEO READY")
+    console.log("3.VIDEO READY, VR SCENE READY!")
     start.innerText="Start!";
     start.addEventListener('click', function (e) {
       if(start.innerText.localeCompare("Start!") === 0 ) {
@@ -102,9 +125,21 @@ function checkLoad() {
       }
     });
   } else {
-      console.log("had to wait...")
+      if(vid.readyState !== 4) console.log("Video not ready...");
+      if(!vrReady) console.log("VR scene not ready...");
+      console.log("... had to wait...");
       setTimeout(checkLoad, 100);
   }
+}
+
+function setEndScreen() {
+    if(document.querySelector('.toggle-credits').innerText.localeCompare("Credits ▶") === 0)
+      document.querySelector('.toggle-credits').click();
+    document.querySelector('#container').style.display = "flex";
+    document.querySelector('#startButton').style.display="none";
+    document.querySelector('#startButtonDeskMob').style.display="none";
+    document.querySelector('#restart').style.display="block";
+    document.querySelector('#play-ep').style.display="block";
 }
 
 
@@ -272,8 +307,11 @@ AFRAME.registerComponent("scene-setup", {
       if( AFRAME.utils.device.isMobileVR() )
         document.querySelector('#cameraRig').object3D.position.y = 0.3;
       city = notSoRandomCity("small");
-    } 
-    else city = notSoRandomCity("normal");
+    }
+    else {
+      this.el.setAttribute("shadow", true);
+      city = notSoRandomCity("normal");
+    }
     scene.add(city);
     starField = new StarField();
     cloudField = new CloudField();

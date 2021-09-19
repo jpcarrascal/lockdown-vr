@@ -36,7 +36,7 @@
   </head>
   <body>
     <!--- A-SCENE STARTS --->
-    <a-scene id="scene" shadow audio-update scene-update scene-setup light-sequencer> <!-- vr-mode-ui="enterVRButton: #startButton;"> -->
+    <a-scene id="scene" shadow="receive:true; cast:true" audio-update scene-update scene-setup light-sequencer vr-mode-ui="enterVRButton: #startButton;">
       <a-sky geometry="primitive: sphere; radius:5000"
         material="shader: threeColorGradientShader; topColor: rgb(0,0,0); middleColor: #AEC1FF; bottomColor: #000;offset: 0.0">
       </a-sky>
@@ -60,7 +60,7 @@
         <img crossorigin="anonymous" id="bass-drum-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fkick-skin.jpg?v=1588790683908" />
         <img crossorigin="anonymous" id="billboard-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FBillboard.jpg?v=1588790684153" />
         <img crossorigin="anonymous" id="table-texture" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Ftable.png?v=1591005267227" />
-        <video crossorigin="anonymous" id="JPvid" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
+        <video crossorigin="anonymous" id="JPvid" autoplay="false" src="https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fshadow.mp4?v=1589038873188"></video>
       </a-assets>
 
       <!-- room -->
@@ -154,7 +154,7 @@
             <a-sphere id="bulb" position="0 0 0" radius="0.05" color="#FFF" shadow="cast:false;receive:false"></a-sphere>
           </a-sphere>
           <a-cylinder mixin="wall" color="#AAA" radius="0.005" height="0.375" position="0 -0.17 0"></a-cylinder>
-          <a-cylinder mixin="wall" color="#AAA" radius="0.1" height="0.02" position="0 -0.02 0" toon="thickness:0.04;"></a-cylinder>
+          <a-cylinder mixin="wall" color="#AAA" radius="0.1" height="0.02" position="0 -0.01 0" toon="thickness:0.04;"></a-cylinder>
         </a-entity>
 
         <a-entity id="drumkit" position="0.88 0 0.4" scale="1.3 1.3 1.3">
@@ -224,7 +224,7 @@
         </a-sphere>
 
         <a-entity id="ambient" light="type: ambient; color: #FFF; intensity:0"></a-entity>
-        <a-entity position="0 0 -2.5" id="street-light" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
+        <a-entity id="street-light" position="0 0 -2.5" light="type: spot; color: #FFEFDF; intensity: 1; castShadow: true; decay:1; distance:100; angle:90"></a-entity>
         <a-entity id="sunlight2" light="type: point; color: #FED; intensity: 0.2; distance: 10; castShadow: true;" position="0 3 -5"></a-entity>
 
         <!-- billboard -->
@@ -310,10 +310,11 @@
     </div>
     
     <div class="ctas">
-      <div id="startButton" class="cta-button" style="display:block">Loading...</div>
-      <div id="restart" class="cta-button" style="display:none">Restart</div>
+      <div id="startButton" class="cta-button startButton" style="display:block">Loading...</div>
+      <div id="startButtonDeskMob" class="cta-button startButton" style="display:none">Loading...</div>
+      <div id="restart" class="cta-button" style="display:none">Restart VR</div>
       <a id="play-ep" class="cta-button" style="display:none" href="http://www.spacebarman.com/?from=fomolisten">
-        Listen
+        Play Music
       </a>
     </div>
     
