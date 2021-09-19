@@ -1,4 +1,4 @@
-/* globals AFRAME, THREE */
+/* globals AFRAME, THREE, THREEx */
 var debug = false;
 window.addEventListener('load', function() {
   console.log("1.WINDOW LOADED")
@@ -19,9 +19,11 @@ window.addEventListener('load', function() {
   });
   
   document.querySelector("#JPvid").addEventListener('ended', function() {
-    console.log("X.VIDEO ENDED")
-    document.querySelector('#myEnterVRButton').style.display="none";
-    //document.querySelector('#restart').style.display="block";
+    console.log("X.VIDEO ENDED");
+    document.querySelector('.toggle-credits').click();
+    document.querySelector('#container').style.display = "flex";
+    document.querySelector('#startButton').style.display="none";
+    document.querySelector('#restart').style.display="block";
     document.querySelector('#play-ep').style.display="block";
   });
   document.querySelector('a-scene').addEventListener('exit-vr', function () {
@@ -38,36 +40,31 @@ window.addEventListener('load', function() {
   
   // Keyboard controls:
   document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 49) {
-      roomLightSwitch();
-    }
-  });
-  
-  document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 67) {
-      switchCityLights(city,"random");
+    switch (event.keyCode) {
+      case 49:
+        roomLightSwitch();
+        break;
+      case 67:
+        switchCityLights(city,"random");
+        break;
+      case 86:
+        switchCityLights(city,"off");
+        break;
+      case 76:
+        {
+          cloudField.flashCounter = 2;
+          cloudField.lightningsOn();
+          break;
+        }
+      case 84:
+        clockDirection *= -1;
+        break;
+      case 32:
+        spacebarHandler();
+        break;
     }
   });
 
-  document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 86) {
-      switchCityLights(city,"off");
-    }
-  });
-  
-  document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 76) {
-      cloudField.flashCounter = 2;
-      cloudField.lightningsOn();
-    }
-  });
-  
-  document.addEventListener('keydown', function(event) {
-    if(event.keyCode == 84) {
-      clockDirection *= -1;
-    }
-  });
-  
   checkLoad();
 });
 
@@ -77,9 +74,10 @@ window.addEventListener('load', function() {
 // but sometimes the video loads early and no more 'loadeddata' events are not triggered anymore.
 function checkLoad() {
   var vid = document.querySelector("#JPvid");
-  var start = document.querySelector('#myEnterVRButton');
-  var veil = document.querySelector('#veil');
+  var start = document.querySelector('#startButton');
+  var container = document.querySelector('#container');
   if (vid.readyState === 4) {
+    
     if(!debug) document.querySelector('#scene').pause();
     console.log("3.VIDEO READY")
     start.innerText="Start!";
@@ -95,6 +93,7 @@ function checkLoad() {
               BD.source.start(ctx.currentTime, audioStartTime, 194);
               SD.source.start(ctx.currentTime, audioStartTime, 194);
               HH.source.start(ctx.currentTime, audioStartTime, 194);
+              container.style.display = "none";
               start.innerText="Go back to VR!"; 
           }).catch(function(error) {
             console.log("Error playing audio or video!!!");
@@ -111,7 +110,7 @@ function checkLoad() {
 
 function debugThis(text)
 {
-  document.querySelector('#myEnterVRButton').innerText = text;
+  document.querySelector('#startButton').innerText = text;
 }
 
 // https://gist.github.com/xposedbones/75ebaef3c10060a3ee3b246166caab56
@@ -188,8 +187,9 @@ setupSample(HHLocation)
 
 function roomLightSwitch(status="")
 {
-  let sw = document.querySelector("#room-light");
+  let light = document.querySelector("#room-light");
   let lamp = document.querySelector("#lamp");
+  let sw = document.querySelector("#switch");
   const onValue = 0.7;
   const offValue = 0.05;
   const onColor = "#FFFFEE";
@@ -199,24 +199,28 @@ function roomLightSwitch(status="")
   if(status == "on")
   {
     lamp.setAttribute("material",{color: onColor, shader: onShader});
-    sw.setAttribute("light", {intensity: onValue});
+    light.setAttribute("light", {intensity: onValue});
+    sw.object3D.rotation.z = -0.1;
   }
   else if(status == "off")
   {
     lamp.setAttribute("material",{color: offColor, shader: offShader});
-    sw.setAttribute("light", {intensity: offValue});
+    light.setAttribute("light", {intensity: offValue});
+    sw.object3D.rotation.z = 0.1;
   }
   else
   {
-    if(sw.getAttribute("light").intensity < onValue)
+    if(light.getAttribute("light").intensity < onValue)
     {
       lamp.setAttribute("material",{color: onColor, shader: onShader});
-      sw.setAttribute("light", {intensity: onValue});
+      light.setAttribute("light", {intensity: onValue});
+      sw.object3D.rotation.z = -0.1;
     }
     else
     {
       lamp.setAttribute("material",{color: offColor, shader: offShader});
-      sw.setAttribute("light", {intensity: offValue});
+      light.setAttribute("light", {intensity: offValue});
+      sw.object3D.rotation.z = 0.1;
     }
   }
 }
@@ -278,12 +282,15 @@ AFRAME.registerComponent("scene-setup", {
     scene.add(cloudField.clouds);
     scene.add(cloudField.lightnings);
     scene.add(cloudField.flash);
+    document.querySelector("#switch").object3D.rotation.z = 0.1;
   }
 });
 
+
+
+
 AFRAME.registerComponent("scene-update", {
-  schema: {
-    
+  schema: {    
   },
   
   init: function () {
@@ -301,6 +308,7 @@ AFRAME.registerComponent("scene-update", {
     // Audio stuff:
     this.peak = false;
     this.peakCount = -1;
+    
   },
   
   pause: function() {
@@ -526,7 +534,7 @@ AFRAME.registerComponent("scene-update", {
     }
     /*----- Sky update end -----*/
     /*----- Audio update starts -----*/
-        if(time < 183100 && startTime >=0 )
+    if(time < 183100 && startTime >=0 )
     {
       let pos = this.el.object3D.position;
       let snareDrum = document.querySelector('#snare-drum');
@@ -586,13 +594,95 @@ AFRAME.registerComponent("scene-update", {
           head.object3D.position.z = -boundary;
       }
     }
-      /*---- Room boundaries ends ----*/
-    if(document.querySelector('#hud')) {
-      var headLocation = (Math.round(headX * 100)/100)+","+(Math.round(headZ * 100)/100);
-      document.querySelector('#hud').setAttribute("text",{value: headLocation}); 
-    }
-  }
+    /*---- Room boundaries ends ----*/
+    
+    //spacebarHandler();
+    /* Experimental: detect object collisions: */
+    /*
+    var tmp;
+    if( detectCollision(document.querySelector("#t1").object3D, document.querySelector("#t2").object3D) )
+      tmp = "YEAH";
+    else
+      tmp = "no";
+    document.querySelector('#hud').setAttribute("text",{value: tmp});
+    */
+  } /*tick() ends here */
 });
+
+
+function spacebarHandler () {
+    if(document.querySelector('#hud')) {
+      var clockAbsPos = new THREE.Vector3();
+      var swAbsPos = new THREE.Vector3();
+      document.querySelector('#clock').object3D.getWorldPosition(clockAbsPos);
+      document.querySelector('#switch').object3D.getWorldPosition(swAbsPos);
+      var headX = document.querySelector('#rig').object3D.position.x;
+      var headZ = document.querySelector('#rig').object3D.position.z;
+      var headRotation = document.querySelector('#head').object3D.rotation.y/(Math.PI*2);
+      var lookingAt = headRotation - Math.floor(headRotation);
+      var dClock = distance2d( headX, headZ, clockAbsPos.x, clockAbsPos.z );
+      var dSw = distance2d( headX, headZ, swAbsPos.x, swAbsPos.z );
+      var hud= "";
+      if( dClock<0.7 && (lookingAt > 0.6 && lookingAt < 0.9) ) {
+        clockDirection *= -1;
+        hud = "Clock";
+      }
+      else if( dSw<0.7 && (lookingAt > 0.1 && lookingAt < 0.4) ) {
+        hud = "Switch"
+        roomLightSwitch();
+      }
+      else
+        hud = "";
+      //document.querySelector('#hud').setAttribute("text",{value: hud}); 
+    }
+}
+
+function detectCollision(object1, object2) {
+  var box1, box2;
+  if(object1.geometry) {
+    object1.geometry.computeBoundingBox();
+    object1.updateMatrixWorld();
+    box1 = object1.geometry.boundingBox.clone();
+    box1.applyMatrix4(object1.matrixWorld);
+  } else {
+    object1.updateMatrixWorld();
+    box1 = new THREE.Box3().setFromObject(object1);
+    box1.applyMatrix4(object1.matrixWorld);
+  }
+  
+  if(object2.geometry) {
+    object2.geometry.computeBoundingBox();
+    object2.updateMatrixWorld();
+    box2 = object2.geometry.boundingBox.clone();
+    box2.applyMatrix4(object2.matrixWorld);
+  } else {
+    object2.updateMatrixWorld();
+    box2 = new THREE.Box3().setFromObject(object1);
+    box2.applyMatrix4(object2.matrixWorld);
+  }
+
+  if(box1.intersectsBox(box2))
+    console.log("YES")
+  return box1.intersectsBox(box2);
+}
+
+
+function distanceVector( v1, v2 )
+{
+    var dx = v1.x - v2.x;
+    var dy = v1.y - v2.y;
+    var dz = v1.z - v2.z;
+
+    return Math.sqrt( dx * dx + dy * dy + dz * dz );
+}
+
+function distance2d( x1, y1, x2, y2 )
+{
+    var dx = x1 - x2;
+    var dy = y1 - y2;
+
+    return Math.sqrt( dx * dx + dy * dy );
+}
 
 
 class StarField {
@@ -1122,15 +1212,6 @@ AFRAME.registerComponent('toon-model', {
   
   
 });
-
-function distanceVector( v1, v2 )
-{
-    var dx = v1.x - v2.x;
-    var dy = v1.y - v2.y;
-    var dz = v1.z - v2.z;
-
-    return Math.sqrt( dx * dx + dy * dy + dz * dz );
-}
 
 function outlineMaterial(depthWrite=true)
 {

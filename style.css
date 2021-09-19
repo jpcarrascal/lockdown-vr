@@ -80,13 +80,13 @@ h1
 }
 
 
-#play-ep, #myEnterVRButton
+#play-ep, #startButton
 {
     background-color: #ff7223;
     color: #272729;
 }
 
-#play-ep:hover, #myEnterVRButton:hover
+#play-ep:hover, #startButton:hover
 {
     color: #ff7223;
     background-color: #272729;
