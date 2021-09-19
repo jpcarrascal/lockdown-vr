@@ -23,7 +23,8 @@ body {
     align-items: center;
     position: absolute;
     height: 100%;
-    font-size: 1em;
+    width: 50%;
+    font-size: 1.4vw;
     text-align: center;
     overflow: visible;
     /*white-space:nowrap;*/
@@ -57,7 +58,7 @@ h1
     align-items: center;
     justify-content: space-between;
     margin-top: 0.5em;
-    width: 560px;
+    width: 100%;
     cursor: pointer;
     user-select: none;
 }
@@ -80,13 +81,13 @@ h1
 }
 
 
-#play-ep, #startButton
+#play-ep, #startButton, #startButtonDeskMob
 {
     background-color: #ff7223;
     color: #272729;
 }
 
-#play-ep:hover, #startButton:hover
+#play-ep:hover, #startButton:hover, #startButtonDeskMob:hover
 {
     color: #ff7223;
     background-color: #272729;
@@ -97,7 +98,7 @@ h1
   flex-direction: column;
   justify-content: center;
   user-select: none;
-  width: 560px;
+  width: 100%;
   background-color: #171719;
 }
 
@@ -146,4 +147,15 @@ a:hover {
 
 .hidden {
   display: none;
+}
+
+
+@media only screen and (hover: none) and (pointer: coarse){
+
+  #container
+  {
+      width: 100%;
+      font-size: 3.5vw;
+  }
+
 }
