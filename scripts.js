@@ -309,7 +309,7 @@ AFRAME.registerComponent("scene-setup", {
       city = notSoRandomCity("small");
     }
     else {
-      this.el.setAttribute("shadow", true);
+      //this.el.setAttribute("shadow", true);
       city = notSoRandomCity("normal");
     }
     scene.add(city);
@@ -1269,6 +1269,7 @@ function outlineMaterial(depthWrite=true)
 
 function toonize(object, thickness=0, changeMaterial=true, depthWrite=true)
 {
+    // Uncomment to activate toon effect
     return;
     //if( AFRAME.utils.device.isMobile() || AFRAME.utils.device.isMobileVR() )
     //  return;
