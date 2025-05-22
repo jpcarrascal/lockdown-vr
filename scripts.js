@@ -154,9 +154,9 @@ Number.prototype.map = function (in_min, in_max, out_min, out_max) {
 }
 
 var startTime = -1;
-var BDLocation =  "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FKD.mp3?v=1588790685488";
-var SDLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FSD.mp3?v=1588790686804";
-var HHLocation= "https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FHH.mp3?v=1588790683823";
+var BDLocation =  "images/KD.mp3";
+var SDLocation= "images/SD.mp3";
+var HHLocation= "images/HH.mp3";
 
 // Create a new audio context.
 var ctx = new AudioContext();
@@ -739,7 +739,7 @@ class StarField {
     }
     var geometry = new THREE.BufferGeometry();
     geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-    var texture = new THREE.TextureLoader().load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2Fparticle.png?v=1589106936463' );
+    var texture = new THREE.TextureLoader().load( 'images/particle.png' );
     var material = new THREE.PointsMaterial( { color: 0x888888,
                                               size: 40,
                                               map: texture,
@@ -1326,12 +1326,10 @@ function wireframize(object, thickness=1, changeMaterial=true)
 
 
 var gradientMaps = ( function () {
-  var textureLoader = new THREE.TextureLoader();
-  var threeTone = textureLoader.load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FthreeTone.jpg?v=1588790683498' );
+  var textureLoader = new THREE.TextureLoader();  var threeTone = textureLoader.load( 'images/threeTone.jpg' );
   threeTone.minFilter = THREE.NearestFilter;
   threeTone.magFilter = THREE.NearestFilter;
-
-  var fiveTone = textureLoader.load( 'https://cdn.glitch.com/109d7acc-45a0-4bd5-aeed-6665c9c783e8%2FfiveTone.jpg?v=1588790683738' );
+  var fiveTone = textureLoader.load( 'images/fiveTone.jpg' );
   fiveTone.minFilter = THREE.NearestFilter;
   fiveTone.magFilter = THREE.NearestFilter;
 
